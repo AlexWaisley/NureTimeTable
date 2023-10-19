@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Lesson from './lesson.vue';
+import Lesson from './Lesson.vue';
 
 let lessons = new Array(6);
 </script>

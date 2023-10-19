@@ -6,9 +6,9 @@
             <div class="lesson__time-end">9:20</div>
         </div>
         <hr>
-        <div class="lesson__name">Математика</div>
+        <div class="lesson__name">Теорія інформації та кодування</div>
         <hr>
-        <div class="lesson__teacher">Кузнецова Е.В.</div>
+        <div class="lesson__type">Практичне заняття</div>
         <hr>
         <div class="lesson__room">Каб. 1</div>
     </div>
@@ -28,6 +28,8 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     margin: 10px 0;
     padding: 5px 2rem;
+    font-size: 1.25rem;
+    font-weight: 500;
 }
 
 .lesson__time {
@@ -38,7 +40,7 @@
     flex: 2;
 }
 
-.lesson__teacher {
+.lesson__type {
     flex: 2;
 }
 
