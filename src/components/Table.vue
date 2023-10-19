@@ -5,9 +5,16 @@ let lessons = new Array(6);
 </script>
 <template>
     <div class="main">
-        <div class="day">
+        <!-- <div class="day">
             <div class="lesson_container" v-for="_ in lessons">
                 <Lesson></Lesson>
+            </div>
+        </div> -->
+        <div class="week">
+            <div class="week__day" v-for="_ in 7">
+                <div class="lesson_container" v-for="_ in lessons">
+                    <Lesson></Lesson>
+                </div>
             </div>
         </div>
     </div>
@@ -15,10 +22,9 @@ let lessons = new Array(6);
 <style scoped>
 .main {
     display: flex;
-    justify-content: center;
-    align-items: center;
     overflow-y: auto;
-    overflow-x: hidden;
+    padding: 10px;
+    justify-content: center;
 }
 
 .day {
@@ -34,7 +40,29 @@ let lessons = new Array(6);
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 95%;
+    max-width: 100%;
+}
+
+.week {
+    padding-top: 1rem;
+    display: flex;
+    gap: 4rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.week__day {
+    flex: 1;
+    max-width: 550px;
+    padding: .5rem;
+    background-color: #e2e2e2;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+
 }
 </style>
 

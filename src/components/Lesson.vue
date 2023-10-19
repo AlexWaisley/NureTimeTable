@@ -17,22 +17,22 @@
 .lesson {
     display: flex;
     flex-direction: row;
-    gap: 2rem;
+    gap: .3rem;
     align-items: center;
     justify-content: space-around;
     text-align: center;
-    width: 80%;
     height: 100px;
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     margin: 10px 0;
-    padding: 5px 2rem;
+    padding: 5px .7rem;
     font-size: 1.25rem;
     font-weight: 500;
 }
 
 .lesson__time {
+
     flex: 1;
 }
 

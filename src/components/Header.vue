@@ -17,9 +17,8 @@
 header {
     display: flex;
     justify-content: space-between;
-    flex: 30% 30% 30%;
     align-items: center;
-    gap: 2rem;
+    gap: .5rem;
     padding: 0 20px;
     min-height: 100px;
     background-color: #fff;
@@ -46,7 +45,7 @@ header {
     display: flex;
     font-size: 2rem;
     font-weight: 700;
-    flex: 1;
+    flex: 2;
     justify-content: center;
     align-items: center;
 }
