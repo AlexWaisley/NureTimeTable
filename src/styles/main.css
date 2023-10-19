@@ -1,0 +1,30 @@
+html,body, #app{
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    color: #333;
+    background-color: #f5f5f5;
+}
+#app{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+button{
+    background: none;
+    outline: none;
+    border-radius: 1rem;
+    border: 1px solid #333;
+    padding: 0.5rem 1rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+button:hover{
+    background-color: #333;
+    color: #fff;
+}
