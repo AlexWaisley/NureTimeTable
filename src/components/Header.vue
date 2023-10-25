@@ -1,23 +1,34 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+defineEmits(['changeDisplaying'])
+
+const currDate = new Date();
+const currMonthLongName = currDate.toLocaleString('en-us', { month: 'long' });
+const currWeekdayLongName = currDate.toLocaleString('en-us', { weekday: 'long' });
+
+let dateString = `${currDate.getDate()}  ${currMonthLongName}  ${currDate.getFullYear()}`;
+let date_alt = `${currWeekdayLongName}`;
+
+</script>
 <template>
     <header>
         <div class="logo">
-            <img src="../assets/logo.jpg" alt="logo" height="80px" />
+            <img src="../assets/logo.jpg" alt="logo" />
             <span>NureTable</span>
         </div>
         <div class="date">
-            <span>19 dec 2023</span>
+            <span>{{ dateString }}</span>
         </div>
-        <div class="options">
-            <button class="list">DAY</button>
+        <div class="view-display-container">
+            <button @click="$emit('changeDisplaying')" class="display-view">DAY</button>
         </div>
     </header>
 </template>
 <style scoped>
 header {
-    display: flex;
+    display: grid;
     justify-content: space-between;
     align-items: center;
+    grid-template-columns: 25% 50% 25%;
     gap: .5rem;
     padding: 0 20px;
     min-height: 100px;
@@ -29,11 +40,11 @@ header {
 .logo {
     display: flex;
     align-items: center;
-    flex: 1;
 }
 
 .logo img {
     margin-right: 10px;
+    height: 80px;
 }
 
 .logo span {
@@ -42,17 +53,15 @@ header {
 }
 
 .date {
-    display: flex;
+    display: grid;
     font-size: 2rem;
     font-weight: 700;
-    flex: 2;
     justify-content: center;
     align-items: center;
 }
 
-.options {
+.view-display-container {
     display: flex;
-    flex: 1;
     justify-content: end;
 }
 </style>

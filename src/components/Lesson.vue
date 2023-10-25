@@ -6,7 +6,7 @@
             <div class="lesson__time-end">9:20</div>
         </div>
         <hr>
-        <div class="lesson__name">Теорія інформації та кодування</div>
+        <div class="lesson__name">Длинное название</div>
         <hr>
         <div class="lesson__type">Практичне заняття</div>
         <hr>
