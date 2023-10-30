@@ -1,12 +1,19 @@
 <script setup lang="ts">
+import { defineProps, watch, ref, defineEmits } from 'vue';
+
 defineEmits(['changeDisplaying'])
 
-const currDate = new Date();
-const currMonthLongName = currDate.toLocaleString('en-us', { month: 'long' });
-const currWeekdayLongName = currDate.toLocaleString('en-us', { weekday: 'long' });
+const properti = defineProps({
+    dateString: String,
+    tableViewDay: Boolean
+});
 
-let dateString = `${currDate.getDate()}  ${currMonthLongName}  ${currDate.getFullYear()}`;
-let date_alt = `${currWeekdayLongName}`;
+const viewDay = ref(properti.tableViewDay);
+let viewChangeBtnText = viewDay ? "Week" : "Day";
+
+watch(properti, () => {
+    viewChangeBtnText = properti.tableViewDay ? "Week" : "Day";
+});
 
 </script>
 <template>
@@ -16,10 +23,10 @@ let date_alt = `${currWeekdayLongName}`;
             <span>NureTable</span>
         </div>
         <div class="date">
-            <span>{{ dateString }}</span>
+            <span>{{ properti.dateString }}</span>
         </div>
         <div class="view-display-container">
-            <button @click="$emit('changeDisplaying')" class="display-view">DAY</button>
+            <button @click="$emit('changeDisplaying')" class="display-view">{{ viewChangeBtnText }}</button>
         </div>
     </header>
 </template>

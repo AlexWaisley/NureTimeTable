@@ -26,46 +26,69 @@ let lessons = new Array(6);
                 <a href="https://www.youtube.com/watch?v=ohD7dOXQH-U" class="lesson_list_text">Link</a>
             </div>
         </aside>
-        <div v-if="properti.tableViewDay" class="day">
-            <div class="lesson_container" v-for="_ in lessons">
-                <Lesson></Lesson>
-            </div>
-        </div>
-        <div v-else class="week">
-            <div class="week__day" v-for="_ in 7">
-                <span>Monday</span>
+        <div class="table_container">
+            <div v-if="properti.tableViewDay" class="day">
                 <div class="lesson_container" v-for="_ in lessons">
                     <Lesson></Lesson>
                 </div>
             </div>
+            <div v-else class="week">
+                <div class="week__day" v-for="_ in 7">
+                    <span>30 october Monday</span>
+                    <div class="lesson_container" v-for="_ in lessons">
+                        <Lesson></Lesson>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="switcher">
+            <button><span>prev</span></button>
+            <button><span>next</span></button>
         </div>
     </div>
 </template>
 <style scoped>
+.switcher {
+    display: flex;
+    height: 100%;
+    justify-content: flex-end;
+    flex-direction: column;
+    gap: 1rem;
+}
+
 .current_day_info {
-    position: fixed;
-    width: 13%;
-    height: 87%;
+    width: 7rem;
+    height: 38rem;
+    max-height: 90%;
     background-color: #fff;
     display: flex;
-    justify-content: center;
     align-items: center;
+    padding: 1rem;
     flex-direction: column;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    overflow-y: auto;
 }
 
 hr {
     width: 100%;
 }
 
-.lesson_list {}
+.table_container {
+    display: flex;
+    justify-content: center;
+    overflow-y: auto;
+    width: 100%;
+    max-height: 100%;
+}
 
 .main {
     display: flex;
-    overflow-y: auto;
-    padding: 10px;
+    padding: 0 10px;
     justify-content: space-between;
+    align-items: center;
+    max-height: 100%;
+    gap: 0.5rem;
 }
 
 .day {
@@ -92,6 +115,7 @@ hr {
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
+    max-height: 100%;
 }
 
 .week__day {
