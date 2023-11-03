@@ -17,8 +17,6 @@ const formattedString = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month
 
 const currLessons = lessonList.value.filter(x => x.StartDate === formattedString);
 
-console.log(currLessons);
-
 let dateString = `${currDate.getDate()}  ${currMonthLongName}  ${currDate.getFullYear()}`;
 
 let changeDisplaying = () => {
@@ -28,7 +26,7 @@ let changeDisplaying = () => {
 
 <template>
   <Header @change-displaying="changeDisplaying" :date-string="dateString" :table-view-day="displayDay"></Header>
-  <Table :table-view-day="displayDay"></Table>
+  <Table :dateInfo="currDate" :table-view-day="displayDay" :todayLessons="currLessons" :allLessons="lessonList"></Table>
 </template>
 
 <style scoped></style>

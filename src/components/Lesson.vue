@@ -1,18 +1,44 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { defineProps, ref, watchEffect } from 'vue'
+
+let properti = defineProps({
+    startTimeP: String,
+    endTimeP: String,
+    themeP: String,
+    typeP: String,
+    roomP: String,
+});
+
+const theme = ref(properti.themeP);
+const type = ref(properti.typeP);
+const room = ref(properti.roomP);
+const startTime = ref(properti.startTimeP);
+const endTime = ref(properti.endTimeP);
+
+watchEffect(() => {
+    theme.value = properti.themeP;
+    type.value = properti.typeP;
+    room.value = properti.roomP;
+    startTime.value = properti.startTimeP;
+    endTime.value = properti.endTimeP;
+});
+
+</script>
 <template>
     <div class="lesson">
         <div class="lesson__time">
-            <div class="lesson__time-start">7:45</div>
-            <div class="lesson__time-end">9:20</div>
+            <div class="lesson__time-start">{{ startTime }}</div>
+            <div class="lesson__time-end">{{ endTime }}</div>
         </div>
         <hr>
-        <div class="lesson__name">Длинное название</div>
+        <div class="lesson__name">{{ theme }}</div>
         <hr>
-        <div class="lesson__type">Практичне заняття</div>
+        <div class="lesson__type">{{ type }}</div>
         <hr>
-        <div class="lesson__room">Каб. 1</div>
+        <div class="lesson__room">{{ room }}</div>
     </div>
 </template>
+
 <style scoped>
 .lesson {
     display: flex;
@@ -29,10 +55,10 @@
     padding: 5px .7rem;
     font-size: 1.25rem;
     font-weight: 500;
+    width: 100%;
 }
 
 .lesson__time {
-
     flex: 1;
 }
 
