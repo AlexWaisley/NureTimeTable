@@ -4,11 +4,24 @@ import { defineProps, watch, ref, defineEmits } from 'vue';
 defineEmits(['changeDisplaying'])
 
 const properti = defineProps({
-    dateString: String,
+    currDate: Date,
     tableViewDay: Boolean
 });
 
 const viewDay = ref(properti.tableViewDay);
+const currDay = ref(properti.currDate);
+const dateString = ref("");
+
+try {
+    if (currDay.value === undefined) {
+        throw new Error("Current day is undefined.");
+    }
+    const currMonthLongName = currDay.value.toLocaleString('en-us', { month: 'long' });
+    dateString.value = `${currDay.value.getDate()}  ${currMonthLongName}  ${currDay.value.getFullYear()}`;
+} catch (error) {
+    console.log(error);
+}
+
 let viewChangeBtnText = viewDay ? "Week" : "Day";
 
 watch(properti, () => {
@@ -23,7 +36,7 @@ watch(properti, () => {
             <span>NureTable</span>
         </div>
         <div class="date">
-            <span>{{ properti.dateString }}</span>
+            <span>{{ dateString }}</span>
         </div>
         <div class="view-display-container">
             <button @click="$emit('changeDisplaying')" class="display-view">{{ viewChangeBtnText }}</button>
