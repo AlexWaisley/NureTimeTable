@@ -1,41 +1,44 @@
 <script setup lang="ts">
-import { defineProps, ref, watchEffect } from 'vue'
+import { defineProps, ref, watchEffect } from 'vue';
+import TableInfo from '../modules/tableInfo.ts';
 
-let properti = defineProps({
-    startTimeP: String,
-    endTimeP: String,
-    themeP: String,
-    typeP: String,
-    roomP: String,
+const properti = defineProps({
+    lesson: TableInfo,
 });
 
-const theme = ref(properti.themeP);
-const type = ref(properti.typeP);
-const room = ref(properti.roomP);
-const startTime = ref(properti.startTimeP);
-const endTime = ref(properti.endTimeP);
+const thisLesson = ref<TableInfo>(new TableInfo());
 
-watchEffect(() => {
-    theme.value = properti.themeP;
-    type.value = properti.typeP;
-    room.value = properti.roomP;
-    startTime.value = properti.startTimeP;
-    endTime.value = properti.endTimeP;
-});
+try {
+    if (properti.lesson !== undefined) {
+        thisLesson.value = properti.lesson;
+
+        watchEffect(() => {
+            if (properti.lesson !== undefined) {
+                thisLesson.value = properti.lesson;
+            }
+        });
+    }
+    else {
+        throw new Error("Lesson properti in lesson component is undefined");
+    }
+} catch (error) {
+    console.log(error);
+}
+
 
 </script>
 <template>
     <div class="lesson">
         <div class="lesson__time">
-            <div class="lesson__time-start">{{ startTime }}</div>
-            <div class="lesson__time-end">{{ endTime }}</div>
+            <div class="lesson__time-start">{{ thisLesson.StartTime }}</div>
+            <div class="lesson__time-end">{{ thisLesson.EndTime }}</div>
         </div>
         <hr>
-        <div class="lesson__name">{{ theme }}</div>
+        <div class="lesson__name">{{ thisLesson.Theme }}</div>
         <hr>
-        <div class="lesson__type">{{ type }}</div>
+        <div class="lesson__type">{{ thisLesson.Type }}</div>
         <hr>
-        <div class="lesson__room">{{ room }}</div>
+        <div class="lesson__room">{{ thisLesson.Room }}</div>
     </div>
 </template>
 

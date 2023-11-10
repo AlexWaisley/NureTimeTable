@@ -1,22 +1,24 @@
 <script setup lang="ts">
+import TableInfo from '../modules/tableInfo.ts';
 import Lesson from './Lesson.vue';
-import { defineProps } from 'vue'
+import { ref, defineProps, watch } from 'vue'
 
-const properti = defineProps({
-    tableViewDay: Boolean,
-    todayLessons: Array,
-    allLessons: Array,
-    dateInfo: Date
+import { getSheduleByUnix } from '../modules/sheduleParser.ts';
+
+const prop = defineProps({
+    pickedDate: Number,
+});
+
+const todayLessons = ref<TableInfo[]>(getSheduleByUnix(prop.pickedDate));
+
+watch(() => prop.pickedDate, () => {
+    todayLessons.value = getSheduleByUnix(prop.pickedDate);
 });
 
 </script>
 <template>
-    <div class="day">
-        <div class="lesson_container" v-for="_ in 7">
-            <!-- <Lesson :start-time-p="lesson_info.StartTime" :end-time-p="lesson_info.EndTime" :theme-p="lesson_info.Theme"
-                :type-p="lesson_info.Type" :room-p="lesson_info.Room">
-            </Lesson> -->
-        </div>
+    <div class="lesson_container" v-for="lesson_info in todayLessons">
+        <Lesson :lesson="lesson_info"> </Lesson>
     </div>
 </template>
 <style scoped>

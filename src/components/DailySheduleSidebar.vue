@@ -1,54 +1,17 @@
 <script setup lang="ts">
 import TableInfo from '../modules/tableInfo.ts';
-import linksConnectData from '../data/linkConnect.json';
-import linksCheckoutData from '../data/linkCheckout.json';
-const linkConnectDictionary = ref<Record<string, string>>(linksConnectData._value);
-const linkCheckoutDictionary = ref<Record<string, string>>(linksCheckoutData._value);
+import { currentDate, DictionaryDestiny } from '../modules/dataParser.ts'
+import { getSheduleByDateWithoutEmpty, getLink } from '../modules/sheduleParser.ts'
 
-import { ref, defineProps } from 'vue'
+import { ref } from 'vue'
 
-
-const properti = defineProps({
-    todayLessons: Array<TableInfo>,
-    dateInfo: Date
-});
-const currDayShedule = ref<TableInfo[]>([]);
-const currWeekDay = ref("");
-
-try {
-    if (properti.todayLessons === undefined) {
-        throw new Error('Today Lessons in dailySheduleSidebar is undefined');
-    }
-    if (properti.dateInfo === undefined) {
-        throw new Error('Date info in dailySheduleSidebar is undefined');
-    }
-    currDayShedule.value = properti.todayLessons;
-    currWeekDay.value = properti.dateInfo.toLocaleDateString('en-Us', { weekday: "long" });
-} catch (error) {
-    console.log(error);
-}
-
-const getLink = (key: TableInfo, type: DictionaryDestiny): string => {
-    switch (type) {
-        case DictionaryDestiny.LINK_CONNECT:
-            return linkConnectDictionary.value[key.Theme + ' ' + key.Type];
-        case DictionaryDestiny.LINK_CHECKOUT:
-            return linkCheckoutDictionary.value[key.Theme + ' ' + key.Type];
-        default:
-            console.log("Type is not found");
-            return "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
-    }
-};
-
-enum DictionaryDestiny {
-    LINK_CONNECT,
-    LINK_CHECKOUT
-}
+const currDayShedule = ref<TableInfo[]>(getSheduleByDateWithoutEmpty(currentDate));
+const currWeekDay = ref(currentDate.toLocaleDateString('en-Us', { weekday: "long" }));
 
 </script>
 <template>
     <span>Today: {{ currWeekDay }}</span>
-    <div class="lesson_list" v-for="lesson in todayLessons">
+    <div class="lesson_list" v-for="lesson in currDayShedule">
         <hr>
         <span class="lesson_list_text">{{ lesson.StartTime }}</span>
         <br>

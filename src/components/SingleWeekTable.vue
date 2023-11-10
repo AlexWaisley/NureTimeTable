@@ -1,23 +1,28 @@
 <script setup lang="ts">
 import Lesson from './Lesson.vue';
-import { defineProps } from 'vue'
+import { defineProps, watch } from 'vue'
+
+import { getSheduleForWeek } from "../modules/sheduleParser.ts";
 
 
-const properti = defineProps({
-    tableViewDay: Boolean,
-    todayLessons: Array,
-    allLessons: Array,
-    dateInfo: Date
+const prop = defineProps({
+    pickedDate: Number,
 });
 
+let sheduleForWeek = getSheduleForWeek(prop.pickedDate);
+
+
+watch(() => prop.pickedDate, (newVal) => {
+    sheduleForWeek = getSheduleForWeek(newVal);
+})
 
 </script>
 <template>
     <div class="week">
-        <div class="week__day" v-for="_ in 7">
-            <span>30 october Monday</span>
-            <div class="lesson_container" v-for="_ in 7">
-                <Lesson></Lesson>
+        <div class="week__day" v-for="dayLessons in sheduleForWeek">
+            <span>CUM</span>
+            <div class="lesson_container" v-for="lessonInfo in dayLessons">
+                <Lesson :lesson="lessonInfo"></Lesson>
             </div>
         </div>
     </div>

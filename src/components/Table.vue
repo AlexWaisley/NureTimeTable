@@ -1,28 +1,24 @@
 <script setup lang="ts">
-import LessonClass from '../modules/lesson.ts';
 import WeekTable from './SingleWeekTable.vue';
 import DayTable from './SingleDayTable.vue';
-import TableInfo from '../modules/tableInfo.ts';
 import { defineProps } from 'vue'
 
 const properti = defineProps({
     tableViewDay: Boolean,
-    todayLessons: Array,
-    allLessons: Array,
-    dateInfo: Date
+    pickedDate: Number,
 });
 
 </script>
+
 <template>
-    <div class="table_container">
-        <div v-if="properti.tableViewDay" class="day">
-            <DayTable></DayTable>
-        </div>
-        <div v-else class="week">
-            <WeekTable></WeekTable>
-        </div>
+    <div v-if="properti.tableViewDay" class="day">
+        <DayTable :picked-date="properti.pickedDate"></DayTable>
+    </div>
+    <div v-else class="week">
+        <WeekTable :picked-date="properti.pickedDate"></WeekTable>
     </div>
 </template>
+
 <style scoped>
 .table_container {
     display: flex;
