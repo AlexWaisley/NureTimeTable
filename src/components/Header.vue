@@ -17,72 +17,106 @@ try {
         throw new Error("Current day is undefined.");
     }
     const currMonthLongName = currDay.value.toLocaleString('en-us', { month: 'long' });
-    dateString.value = `${currDay.value.getDate()}  ${currMonthLongName}  ${currDay.value.getFullYear()}`;
+    dateString.value = `${currDay.value.getDate()}  ${currMonthLongName}`;
 } catch (error) {
     console.log(error);
 }
 
-let viewChangeBtnText = viewDay ? "Week" : "Day";
+const viewChangeBtnText = ref("");
+viewChangeBtnText.value = viewDay ? "Week" : "Day";
 
-watch(properti, () => {
-    viewChangeBtnText = properti.tableViewDay ? "Week" : "Day";
+watch(() => properti.tableViewDay, async () => {
+
+    const endText = properti.tableViewDay ? "Week" : "Day";
+
+    updateText(viewChangeBtnText.value.length, viewChangeBtnText.value);
+    setTimeout(() => writeUpdatedText(1, endText), 400);
 });
+
+function writeUpdatedText(count: number, endText: string) {
+    if (count <= endText.length) {
+        viewChangeBtnText.value = endText.slice(0, count);
+        count++;
+        setTimeout(() => writeUpdatedText(count, endText), 100);
+    }
+}
+
+function updateText(count: number, text: string) {
+    if (count > 0) {
+        viewChangeBtnText.value = text.slice(0, count);
+        count--;
+        setTimeout(() => updateText(count, text), 100);
+    }
+}
 
 </script>
 <template>
-    <header>
-        <div class="logo">
-            <img src="../assets/logo.jpg" alt="logo" />
+    <div class="app_header">
+        <div class="logo-container">
+            <img class="logo" src="../assets/logo.jpg" alt="logo" />
             <span>NureTable</span>
         </div>
-        <div class="date">
+        <div class="date_container">
             <span>{{ dateString }}</span>
         </div>
         <div class="view-display-container">
-            <button @click="$emit('changeDisplaying')" class="display-view">{{ viewChangeBtnText }}</button>
+            <button type="button" @click="$emit('changeDisplaying')" class="view-display-btn">{{ viewChangeBtnText
+            }}</button>
         </div>
-    </header>
+    </div>
 </template>
 <style scoped>
-header {
+.app_header {
     display: grid;
-    justify-content: space-between;
+    height: 100px;
+    width: 100%;
+    grid-template-columns: 30% 40% 30%;
+    box-shadow: 2px 2px 2px #6650a459;
+    background-color: #6750A4;
+    color: #fff;
+    font-size: 1.7rem;
+}
+
+.logo-container {
+    display: flex;
     align-items: center;
-    grid-template-columns: 25% 50% 25%;
+    justify-content: flex-start;
     gap: .5rem;
-    padding: 0 20px;
-    min-height: 100px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    z-index: 2;
+    padding: .6rem;
 }
 
 .logo {
-    display: flex;
-    align-items: center;
-}
-
-.logo img {
-    margin-right: 10px;
+    border-radius: 10px;
     height: 80px;
 }
 
-.logo span {
-    font-size: 1.5rem;
-    font-weight: 700;
-}
-
-.date {
-    display: grid;
-    font-size: 2rem;
-    font-weight: 700;
-    justify-content: center;
+.date_container {
+    display: flex;
     align-items: center;
+    justify-content: center;
+    font-weight: 700;
 }
 
 .view-display-container {
     display: flex;
+    align-items: center;
     justify-content: end;
+    padding: .6rem;
+}
+
+.view-display-btn {
+    background: none;
+    border-radius: 10px;
+    color: #fff;
+    border: 1px solid #fff;
+    padding: 0.5rem 1rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.view-display-btn:hover {
+    background-color: #4b348c;
 }
 </style>
 
