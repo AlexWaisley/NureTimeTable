@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { defineProps, watch, ref, defineEmits } from 'vue';
+import { defineStore } from "../stores/date.ts";
 
 defineEmits(['changeDisplaying'])
 
@@ -9,24 +10,25 @@ const properti = defineProps({
 });
 
 const viewDay = ref(properti.tableViewDay);
-const currDay = ref(properti.currDate);
 const dateString = ref("");
+const date = ref<Date>(new Date());
 
-try {
-    if (currDay.value === undefined) {
-        throw new Error("Current day is undefined.");
+const updateShowedDate = () => {
+    try {
+        if (date.value === undefined) {
+            throw new Error("Current day is undefined.");
+        }
+        const currMonthLongName = date.value.toLocaleString('en-us', { month: 'long' });
+        dateString.value = `${date.value.getDate()}  ${currMonthLongName}`;
+    } catch (error) {
+        console.log(error);
     }
-    const currMonthLongName = currDay.value.toLocaleString('en-us', { month: 'long' });
-    dateString.value = `${currDay.value.getDate()}  ${currMonthLongName}`;
-} catch (error) {
-    console.log(error);
-}
+};
 
 const viewChangeBtnText = ref("");
 viewChangeBtnText.value = viewDay ? "Week" : "Day";
 
 watch(() => properti.tableViewDay, async () => {
-
     const endText = properti.tableViewDay ? "Week" : "Day";
 
     updateText(viewChangeBtnText.value.length, viewChangeBtnText.value);
@@ -49,6 +51,14 @@ function updateText(count: number, text: string) {
     }
 }
 
+const changeDay = (period: number) => {
+    if (!properti.tableViewDay) {
+        period *= 7;
+    }
+    date?.value.setDate(date.value.getDate() + period);
+};
+
+updateShowedDate();
 </script>
 <template>
     <div class="app_header">
@@ -56,8 +66,16 @@ function updateText(count: number, text: string) {
             <img class="logo" src="../assets/logo.jpg" alt="logo" />
             <span>NureTable</span>
         </div>
-        <div class="date_container">
-            <span>{{ dateString }}</span>
+        <div class="changeDay__container">
+            <div class="changeDay__btn" @click="changeDay(-1)">
+                <img src="/public/switcher_left.svg">
+            </div>
+            <div class="date_container">
+                <span>{{ dateString }}</span>
+            </div>
+            <div class="changeDay__btn" @click="changeDay(1)">
+                <img src="/public/switcher_right.svg">
+            </div>
         </div>
         <div class="view-display-container">
             <button type="button" @click="$emit('changeDisplaying')" class="view-display-btn">{{ viewChangeBtnText
@@ -81,6 +99,28 @@ function updateText(count: number, text: string) {
         grid-template-columns: 1fr 2fr 1fr;
 
     }
+}
+
+.changeDay__btn {
+    background: none;
+    border-radius: 10px;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+}
+
+.changeDay__btn:hover {
+    background-color: #4b348c;
+}
+
+.changeDay__container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-items: center;
+    align-items: center;
 }
 
 .logo-container {

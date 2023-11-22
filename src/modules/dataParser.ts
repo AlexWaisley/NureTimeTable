@@ -24,6 +24,15 @@ const weekDaysList: string[] = ["Monday", "Tuesday", "Wednesday", "Thursday", "F
 import Lesson from './lesson';
 
 const currentDate = new Date();
+let pickedDateUnix = currentDate.getTime();
+
+const updateUnixTimestamp = (date:Date) => {
+    pickedDateUnix = Math.floor(date.getTime());
+}
+
+const getPickedDateUnix = ():number=>{
+    return pickedDateUnix;
+}
 
 enum DictionaryDestiny {
     LINK_CONNECT,
@@ -32,6 +41,7 @@ enum DictionaryDestiny {
 
 export{
     currentDate,
+    pickedDateUnix,
     DictionaryDestiny,
     themeDictionary,
     typeDictionary,
@@ -40,4 +50,6 @@ export{
     lessonsList,
     timeTable,
     weekDaysList,
+    updateUnixTimestamp,
+    getPickedDateUnix,
 };

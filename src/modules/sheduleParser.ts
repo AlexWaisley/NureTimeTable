@@ -133,5 +133,5 @@ export{
     getSheduleByDate,
     getSheduleByDateWithoutEmpty,
     getSheduleForWeek,
-    getSheduleByUnix
+    getSheduleByUnix,    
 }

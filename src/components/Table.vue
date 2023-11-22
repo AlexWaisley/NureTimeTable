@@ -1,22 +1,22 @@
 <script setup lang="ts">
 import WeekTable from './SingleWeekTable.vue';
 import DayTable from './SingleDayTable.vue';
-import { defineProps } from 'vue'
+import { defineProps, ref } from 'vue'
 
 const properti = defineProps({
     tableViewDay: Boolean,
-    pickedDate: Number,
 });
+
+const pickedDate = ref<number>();
 
 </script>
 
 <template>
     <div class="table_container">
-        <DayTable :class="{ active: properti.tableViewDay, disabled: !properti.tableViewDay }"
-            :picked-date="properti.pickedDate">
+        <DayTable :class="{ active: properti.tableViewDay, disabled: !properti.tableViewDay }" :picked-date="pickedDate">
         </DayTable>
-        <WeekTable :class="{ active: !properti.tableViewDay, disabled: properti.tableViewDay }"
-            :picked-date="properti.pickedDate"></WeekTable>
+        <WeekTable :class="{ active: !properti.tableViewDay, disabled: properti.tableViewDay }" :picked-date="pickedDate">
+        </WeekTable>
     </div>
 </template>
 
