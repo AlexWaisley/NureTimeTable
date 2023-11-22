@@ -1,13 +1,20 @@
 <script setup lang="ts">
 import WeekTable from './SingleWeekTable.vue';
 import DayTable from './SingleDayTable.vue';
-import { defineProps, ref } from 'vue'
+import { defineProps, ref, watch } from 'vue';
+import { useDateStore } from "../stores/date.ts";
+const storeDate = useDateStore();
+
+const pickedDate = ref<number>(storeDate.date);
+
+watch(() => storeDate.date, () => {
+    pickedDate.value = storeDate.date;
+})
 
 const properti = defineProps({
     tableViewDay: Boolean,
 });
 
-const pickedDate = ref<number>();
 
 </script>
 
@@ -24,6 +31,7 @@ const pickedDate = ref<number>();
 .table_container {
     display: grid;
     margin: 1rem;
+    padding: 0 1rem;
 }
 
 .active {

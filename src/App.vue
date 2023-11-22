@@ -8,6 +8,14 @@ import shedule from './data/Table.json';
 
 import { ref } from 'vue';
 
+import { createPinia } from 'pinia';
+import { createApp } from 'vue'
+import App from './App.vue'
+
+const pinia = createPinia()
+const app = createApp(App)
+app.use(pinia)
+
 const lessonList = ref<Lesson[]>(shedule.lessons);
 
 const displayDay = ref(true);

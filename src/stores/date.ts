@@ -5,4 +5,9 @@ export const useDateStore = defineStore({
     state:()=>({
         date:1700679390793
     }),
+    actions:{
+        updateDate(unixTimestamp:number){
+            this.date = unixTimestamp;
+        }
+    }
 });

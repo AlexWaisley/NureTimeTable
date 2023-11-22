@@ -16,17 +16,14 @@ const getSheduleByDateWithoutEmpty = (date:Date):TableInfo[] => {
     return shedule;
 }
 
-const convertUnixToDate = (unix_time: number): Date => {
-    return new Date(unix_time * 1000);
-};
-
 const getFirstWeekDay = (date: Date): Date => {
     const weekDayNumber = date.getDay();
 
     const difference = weekDayNumber - 1; 
-    date.setDate(date.getDate() - difference);
+    const updatedDate = new Date(date.getTime());
 
-    return date;
+    updatedDate.setDate(date.getDate() - difference);
+    return updatedDate;
 };
 
 
@@ -35,7 +32,7 @@ const getSheduleForWeek = (date:number|undefined):TableInfo[][]=>{
         console.log("Date is undefined in getSheduleForWeek");
         return [];
     }
-    const nowDate = convertUnixToDate(date);
+    const nowDate = new Date(date);
     const firstWeekDay = getFirstWeekDay(nowDate);
 
     const sheduleForWeek:TableInfo[][] = [];
@@ -55,7 +52,7 @@ const getSheduleByUnix = (date:number|undefined):TableInfo[]=>{
     }
     const shedule: TableInfo[] = [];
 
-    const reqDate = convertUnixToDate(date);
+    const reqDate = new Date(date);
 
     const currLessons = getRawSheduleByDate(reqDate);
 
@@ -134,4 +131,5 @@ export{
     getSheduleByDateWithoutEmpty,
     getSheduleForWeek,
     getSheduleByUnix,    
+    getFirstWeekDay,
 }
