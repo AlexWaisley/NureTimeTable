@@ -19,6 +19,8 @@ const timeTable: string[][] = [
     ["16:40", "18:15"]
 ];
 
+const weekDaysList: string[] = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
 import Lesson from './lesson';
 
 const currentDate = new Date();
@@ -37,4 +39,5 @@ export{
     linkCheckoutDictionary,
     lessonsList,
     timeTable,
+    weekDaysList,
 };

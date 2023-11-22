@@ -35,12 +35,12 @@ try {
         </div>
         <hr>
         <div class="lesson__info">
-            <span class="lesson__info__theme">{{ thisLesson.Theme }}</span>
+            <span class="lesson__info__shorted">{{ thisLesson.Theme }}</span>
         </div>
         <hr>
 
         <div class="lesson__info">
-            <span>{{ thisLesson.Type }}</span>
+            <span class="lesson__info__shorted">{{ thisLesson.Type }}</span>
         </div>
         <hr>
         <div class="lesson__info">
@@ -52,7 +52,7 @@ try {
 <style scoped>
 .lesson {
     display: grid;
-    grid-template-columns: repeat(3, 5fr 1fr) 5fr;
+    grid-template-columns: 2fr 1fr 5fr 1fr 5fr 1fr 2fr;
     place-items: center;
     padding: 10px;
     font-size: 1.25rem;
@@ -68,7 +68,7 @@ try {
     text-align: center;
 }
 
-.lesson__info__theme {
+.lesson__info__shorted {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;

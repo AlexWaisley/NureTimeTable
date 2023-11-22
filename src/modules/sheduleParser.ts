@@ -40,7 +40,7 @@ const getSheduleForWeek = (date:number|undefined):TableInfo[][]=>{
 
     const sheduleForWeek:TableInfo[][] = [];
 
-    for (let weekDayNumber = 0; weekDayNumber < 7; weekDayNumber++) {
+    for (let weekDayNumber = 0; weekDayNumber < 6; weekDayNumber++) {
         sheduleForWeek[weekDayNumber] = getSheduleByDate(firstWeekDay);
         firstWeekDay.setDate(firstWeekDay.getDate()+1);
     }

@@ -12,8 +12,11 @@ const properti = defineProps({
 
 <template>
     <div class="table_container">
-        <DayTable v-if="properti.tableViewDay" :picked-date="properti.pickedDate"></DayTable>
-        <WeekTable v-else :picked-date="properti.pickedDate"></WeekTable>
+        <DayTable :class="{ active: properti.tableViewDay, disabled: !properti.tableViewDay }"
+            :picked-date="properti.pickedDate">
+        </DayTable>
+        <WeekTable :class="{ active: !properti.tableViewDay, disabled: properti.tableViewDay }"
+            :picked-date="properti.pickedDate"></WeekTable>
     </div>
 </template>
 
@@ -22,6 +25,41 @@ const properti = defineProps({
     display: grid;
     margin: 1rem;
 }
+
+.active {
+    animation: fadein 1s linear 1 normal forwards;
+}
+
+.disabled {
+    animation: fadeout .7s linear 1 normal forwards;
+    position: absolute;
+    overflow: hidden;
+}
+
+@keyframes fadein {
+    from {
+        height: 0;
+        opacity: 0;
+    }
+
+    to {
+        height: 100%;
+        opacity: 1;
+    }
+}
+
+@keyframes fadeout {
+    from {
+        height: 100%;
+        opacity: 1;
+    }
+
+    to {
+        height: 0;
+        opacity: 0;
+    }
+}
+
 
 @media screen and (min-width:590px) {
     .table_container {

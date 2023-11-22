@@ -3,6 +3,7 @@ import Lesson from './Lesson.vue';
 import { defineProps, watch } from 'vue'
 
 import { getSheduleForWeek } from "../modules/sheduleParser.ts";
+import { weekDaysList } from "../modules/dataParser.ts";
 
 
 const prop = defineProps({
@@ -18,45 +19,44 @@ watch(() => prop.pickedDate, (newVal) => {
 
 </script>
 <template>
-    <div class="week">
-        <div class="week__day" v-for="dayLessons in sheduleForWeek">
-            <span>CUM</span>
-            <div class="lesson_container" v-for="lessonInfo in dayLessons">
+    <div class="week__container">
+        <div class="weekday__container" v-for="(day, index) in weekDaysList">
+            <span class="weekday__text">{{ day }}</span>
+            <div class="lesson_container" v-for="lessonInfo in sheduleForWeek[index]">
                 <Lesson :lesson="lessonInfo"></Lesson>
             </div>
         </div>
     </div>
 </template>
 <style scoped>
-.lesson_container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
+.week__container {
+    display: grid;
+    gap: 3rem;
 }
 
-.week {
-    margin-left: 15%;
-    padding-top: 1rem;
-    display: flex;
-    gap: 4rem;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    max-height: 100%;
+@media screen and (min-width:1400px) {
+    .week__container {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
-.week__day {
-    flex: 1;
-    max-width: 550px;
-    padding: .5rem;
-    background-color: #e2e2e2;
-    border-radius: 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+.weekday__text {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #4F378B;
+}
 
+.weekday__container {
+    display: grid;
+    gap: 0.9rem;
+    grid-template-rows: repeat(7, 1fr);
+    padding: 5px;
+    text-align: center;
+    align-items: center;
+    transition: all .5s ease;
+    background-color: #D0BCFF;
+    border-radius: 10px;
+    box-shadow: 1.5px 1.5px 1.5px rgba(33, 0, 93, 0.34)
 }
 </style>
 
