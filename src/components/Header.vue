@@ -105,7 +105,7 @@ updateShowedDate();
 <template>
     <div class="app_header">
         <div class="logo-container">
-            <img class="logo" src="../assets/logo.jpg" alt="logo" />
+            <img class="logo" src="/logo.jpg" alt="logo" />
             <span>NureTable</span>
         </div>
         <div class="changeDay__container">
