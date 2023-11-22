@@ -29,52 +29,49 @@ try {
 </script>
 <template>
     <div class="lesson">
-        <div class="lesson__time">
+        <div class="lesson__info">
             <div class="lesson__time-start">{{ thisLesson.StartTime }}</div>
             <div class="lesson__time-end">{{ thisLesson.EndTime }}</div>
         </div>
         <hr>
-        <div class="lesson__name">{{ thisLesson.Theme }}</div>
+        <div class="lesson__info">
+            <span class="lesson__info__theme">{{ thisLesson.Theme }}</span>
+        </div>
         <hr>
-        <div class="lesson__type">{{ thisLesson.Type }}</div>
+
+        <div class="lesson__info">
+            <span>{{ thisLesson.Type }}</span>
+        </div>
         <hr>
-        <div class="lesson__room">{{ thisLesson.Room }}</div>
+        <div class="lesson__info">
+            <span>{{ thisLesson.Room }}</span>
+        </div>
     </div>
 </template>
 
 <style scoped>
 .lesson {
-    display: flex;
-    flex-direction: row;
-    gap: .3rem;
-    align-items: center;
-    justify-content: space-around;
-    text-align: center;
-    height: 100px;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    margin: 10px 0;
-    padding: 5px .7rem;
+    display: grid;
+    grid-template-columns: repeat(3, 5fr 1fr) 5fr;
+    place-items: center;
+    padding: 10px;
     font-size: 1.25rem;
-    font-weight: 500;
-    width: 100%;
+    background-color: #EADDFF;
+    color: #21005D;
+    border-radius: 10px;
+    box-shadow: 1.5px 1.5px 1.5px rgba(33, 0, 93, 0.34)
 }
 
-.lesson__time {
-    flex: 1;
+.lesson__info {
+    display: grid;
+    padding: .1rem;
+    text-align: center;
 }
 
-.lesson__name {
-    flex: 2;
-}
-
-.lesson__type {
-    flex: 2;
-}
-
-.lesson__room {
-    flex: 1;
+.lesson__info__theme {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 hr {

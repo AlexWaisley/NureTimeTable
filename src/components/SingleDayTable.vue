@@ -17,25 +17,23 @@ watch(() => prop.pickedDate, () => {
 
 </script>
 <template>
-    <div class="lesson_container" v-for="lesson_info in todayLessons">
-        <Lesson :lesson="lesson_info"> </Lesson>
+    <div class="lesson_container">
+        <Lesson v-for="lesson_info in todayLessons" :lesson="lesson_info"> </Lesson>
     </div>
 </template>
 <style scoped>
-.day {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 1rem 0;
-    max-height: 100%;
-    width: 80%;
+.lesson_container {
+    display: grid;
+    gap: 0.9rem;
+    height: 90%;
+    grid-template-rows: repeat(6, 1fr);
+    padding: 0 5px;
 }
 
-.lesson_container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
+@media screen and (min-width:590px) {
+    .lesson_container {
+        min-width: 550px;
+    }
 }
 </style>
 

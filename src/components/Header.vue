@@ -68,21 +68,27 @@ function updateText(count: number, text: string) {
 <style scoped>
 .app_header {
     display: grid;
-    height: 100px;
+    max-height: 100%;
     width: 100%;
-    grid-template-columns: 30% 40% 30%;
     box-shadow: 2px 2px 2px #6650a459;
     background-color: #6750A4;
     color: #fff;
     font-size: 1.7rem;
 }
 
+@media screen and (min-width:590px) {
+    .app_header {
+        grid-template-columns: 1fr 2fr 1fr;
+
+    }
+}
+
 .logo-container {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
+    display: grid;
+    height: 100%;
     gap: .5rem;
-    padding: .6rem;
+    padding: 0 .7rem;
+    justify-items: center;
 }
 
 .logo {
@@ -91,14 +97,16 @@ function updateText(count: number, text: string) {
 }
 
 .date_container {
-    display: flex;
+    display: grid;
     align-items: center;
+    text-align: center;
     justify-content: center;
     font-weight: 700;
+    text-overflow: ellipsis;
 }
 
 .view-display-container {
-    display: flex;
+    display: grid;
     align-items: center;
     justify-content: end;
     padding: .6rem;
