@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 export const useDateStore = defineStore({
     id:'date',
     state:()=>({
-        date:1700679390793
+        date:new Date().getTime()
     }),
     actions:{
         updateDate(unixTimestamp:number){
