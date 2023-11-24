@@ -17,11 +17,11 @@ watch(() => storeDate.date, () => {
 
 watch(() => storeDate.isTableViewDay, async () => {
     isTableViewDay.value = storeDate.isTableViewDay;
-    updateShowedDate();
-    updateShowedTableView();
+    await updateShowedDate();
+    await updateShowedTableView();
 });
 
-const updateShowedTableView = () => {
+const updateShowedTableView = async () => {
     const endText = isTableViewDay.value ? "Week" : "Day";
 
     updateText({ count: viewChangeBtnText.value.length, endText: viewChangeBtnText.value, element: viewChangeBtnText });
@@ -31,11 +31,11 @@ const updateShowedTableView = () => {
     );
 }
 
-const updateShowedDate = () => {
+const updateShowedDate = async () => {
     const formattedDate = formatDisplayDate(date.value);
-
-    updateText({ count: dateString.value.length, endText: dateString.value, element: dateString });
-    setTimeout(() => writeUpdatedText({ count: 1, endText: formattedDate, element: dateString }), dateString.value.length * 100);
+    dateString.value = formattedDate;
+    /*updateText({ count: dateString.value.length, endText: dateString.value, element: dateString });
+    setTimeout(() => writeUpdatedText({ count: 1, endText: formattedDate, element: dateString }), dateString.value.length * 100);*/
 };
 
 const formatDisplayDate = (value: Date) => {
