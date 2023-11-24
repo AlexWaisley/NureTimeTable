@@ -1,18 +1,15 @@
 <script setup lang="ts">
 import TableInfo from '../modules/tableInfo.ts';
 import Lesson from './Lesson.vue';
-import { ref, defineProps, watch } from 'vue'
+import { ref, watch } from 'vue'
 
 import { getSheduleByUnix } from '../modules/sheduleParser.ts';
+import { useDateStore } from "../stores/date.ts";
+const storeDate = useDateStore();
+const todayLessons = ref<TableInfo[]>(getSheduleByUnix(storeDate.date));
 
-const prop = defineProps({
-    pickedDate: Number,
-});
-
-const todayLessons = ref<TableInfo[]>(getSheduleByUnix(prop.pickedDate));
-
-watch(() => prop.pickedDate, () => {
-    todayLessons.value = getSheduleByUnix(prop.pickedDate);
+watch(() => storeDate.date, (newVal) => {
+    todayLessons.value = getSheduleByUnix(newVal);
 });
 
 </script>

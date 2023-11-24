@@ -1,75 +1,58 @@
 <script setup lang="ts">
-import { defineProps, watch, ref, defineEmits } from 'vue';
-import { useDateStore } from "../stores/date.ts";
+import { watch, ref } from 'vue';
 import { getFirstWeekDay } from "../modules/sheduleParser.ts";
+import { UpdateTextObject } from "../modules/dataParser.ts";
+import { useDateStore } from "../stores/date.ts";
 
 const storeDate = useDateStore();
 
-defineEmits(['changeDisplaying'])
-
-const properti = defineProps({
-    currDate: Date,
-    tableViewDay: Boolean
-});
-
-const viewDay = ref(properti.tableViewDay);
+const isTableViewDay = ref(storeDate.isTableViewDay);
 const dateString = ref("");
 const date = ref<Date>(new Date(storeDate.date));
+const viewChangeBtnText = ref(isTableViewDay.value ? "Week" : "Day");
+
+watch(() => storeDate.date, () => {
+    updateShowedDate();
+});
+
+watch(() => storeDate.isTableViewDay, async () => {
+    isTableViewDay.value = storeDate.isTableViewDay;
+    updateShowedDate();
+    updateShowedTableView();
+});
+
+const updateShowedTableView = () => {
+    const endText = isTableViewDay.value ? "Week" : "Day";
+
+    updateText({ count: viewChangeBtnText.value.length, endText: viewChangeBtnText.value, element: viewChangeBtnText });
+    setTimeout(() =>
+        writeUpdatedText({ count: 1, endText, element: viewChangeBtnText }),
+        viewChangeBtnText.value.length * 100
+    );
+}
 
 const updateShowedDate = () => {
-    try {
-        if (date.value === undefined) {
-            throw new Error("Current day is undefined.");
-        }
+    const formattedDate = formatDisplayDate(date.value);
 
-        const formattedDate = formatDisplayDate(date.value);
-
-
-        updateText({ count: dateString.value.length, endText: dateString.value, element: dateString });
-        setTimeout(() => writeUpdatedText({ count: 1, endText: formattedDate, element: dateString }), dateString.value.length * 100);
-
-
-    } catch (error) {
-        console.error(error);
-    }
+    updateText({ count: dateString.value.length, endText: dateString.value, element: dateString });
+    setTimeout(() => writeUpdatedText({ count: 1, endText: formattedDate, element: dateString }), dateString.value.length * 100);
 };
 
 const formatDisplayDate = (value: Date) => {
-    if (properti.tableViewDay) {
+    if (isTableViewDay.value) {
         const currMonthLongName = value.toLocaleString('en-us', { month: 'long' });
         return `${value.getDate()} ${currMonthLongName}`;
     } else {
         const firstWeekDay = getFirstWeekDay(value);
         const lastWeekDay = new Date(firstWeekDay);
-        const daysToAdd = 5;
-        lastWeekDay.setDate(lastWeekDay.getDate() + daysToAdd);
+        const weekPeriod = 5;
+        lastWeekDay.setDate(lastWeekDay.getDate() + weekPeriod);
 
         const firstWeekDayMonth = firstWeekDay.toLocaleString('en-us', { month: 'long' });
         const lastWeekDayMonth = lastWeekDay.toLocaleString('en-us', { month: 'long' });
 
         return `${firstWeekDay.getDate()} ${firstWeekDayMonth} - ${lastWeekDay.getDate()} ${lastWeekDayMonth}`;
     }
-};
-
-watch(() => storeDate.date, () => {
-    updateShowedDate();
-})
-
-const viewChangeBtnText = ref("");
-viewChangeBtnText.value = viewDay ? "Week" : "Day";
-
-watch(() => properti.tableViewDay, async () => {
-    const endText = properti.tableViewDay ? "Week" : "Day";
-    updateShowedDate();
-
-    updateText({ count: viewChangeBtnText.value.length, endText: viewChangeBtnText.value, element: viewChangeBtnText });
-    setTimeout(() => writeUpdatedText({ count: 1, endText, element: viewChangeBtnText }), viewChangeBtnText.value.length * 100);
-});
-
-type UpdateTextObject = {
-    count: number;
-    endText: string;
-    element: { value: string };
 };
 
 function writeUpdatedText(obj: UpdateTextObject): void {
@@ -93,10 +76,10 @@ function updateText(obj: UpdateTextObject): void {
 }
 
 const changeDay = (period: number) => {
-    if (!properti.tableViewDay) {
+    if (!isTableViewDay.value) {
         period *= 7;
     }
-    date?.value.setDate(date.value.getDate() + period);
+    date.value.setDate(date.value.getDate() + period);
     storeDate.updateDate(date.value.getTime());
 };
 
@@ -110,18 +93,18 @@ updateShowedDate();
         </div>
         <div class="changeDay__container">
             <div class="changeDay__btn" @click="changeDay(-1)">
-                <img src="/public/switcher_left.svg">
+                <img src="/switcher_left.svg">
             </div>
             <div class="date_container">
                 <span>{{ dateString }}</span>
             </div>
             <div class="changeDay__btn" @click="changeDay(1)">
-                <img src="/public/switcher_right.svg">
+                <img src="/switcher_right.svg">
             </div>
         </div>
         <div class="view-display-container">
-            <button type="button" @click="$emit('changeDisplaying')" class="view-display-btn">{{ viewChangeBtnText
-            }}</button>
+            <button type="button" @click="storeDate.changeTableView" class="view-display-btn">{{ viewChangeBtnText }}
+            </button>
         </div>
     </div>
 </template>

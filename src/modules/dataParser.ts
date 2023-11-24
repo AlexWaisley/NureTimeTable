@@ -4,7 +4,6 @@ import sheduleData from '../data/Table.json';
 import linksConnectData from '../data/linkConnect.json';
 import linksCheckoutData from '../data/linkCheckout.json';
 
-
 const linkConnectDictionary: Record<string, string> = linksConnectData._value;
 const linkCheckoutDictionary: Record<string, string> = linksCheckoutData._value;
 const themeDictionary: Record<string, string> = themesData._value;
@@ -18,6 +17,11 @@ const timeTable: string[][] = [
     ["14:55", "16:30"],
     ["16:40", "18:15"]
 ];
+export type UpdateTextObject = {
+    count: number;
+    endText: string;
+    element: { value: string };
+};
 
 const weekDaysList: string[] = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
@@ -51,5 +55,5 @@ export{
     timeTable,
     weekDaysList,
     updateUnixTimestamp,
-    getPickedDateUnix,
+    getPickedDateUnix
 };

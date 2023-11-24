@@ -1,24 +1,12 @@
 <script setup lang="ts">
-
 import DailySheduleSidebar from './DailySheduleSidebar.vue';
 import Table from './Table.vue';
 
-import { defineProps, ref, watch } from 'vue';
-
-watch(() => properti.tableViewDay, (newVal) => { tableViewDay.value = newVal })
-
-const properti = defineProps({
-    tableViewDay: Boolean,
-    allLessons: Array,
-    dateInfo: Date
-});
-
-const tableViewDay = ref(properti.tableViewDay);
 </script>
 <template>
     <div class="main">
         <DailySheduleSidebar></DailySheduleSidebar>
-        <Table :table-view-day="tableViewDay"></Table>
+        <Table></Table>
     </div>
 </template>
 <style scoped>

@@ -5,9 +5,9 @@ import { getSheduleByDateWithoutEmpty, getLink } from '../modules/sheduleParser.
 
 import { ref } from 'vue'
 
-const currDayShedule = ref<TableInfo[]>(getSheduleByDateWithoutEmpty(currentDate));
-const currWeekDay = ref(currentDate.toLocaleDateString('en-Us', { weekday: "long" }));
 const currDay = ref(currentDate.toLocaleDateString('en-Us', { day: "2-digit", month: "long" }));
+const currWeekDay = ref(currentDate.toLocaleDateString('en-Us', { weekday: "long" }));
+const currDayShedule = ref<TableInfo[]>(getSheduleByDateWithoutEmpty(currentDate));
 
 </script>
 <template>

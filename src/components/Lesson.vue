@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, ref, watchEffect } from 'vue';
+import { ref, watchEffect } from 'vue';
 import TableInfo from '../modules/tableInfo.ts';
 
 const properti = defineProps({
@@ -38,7 +38,6 @@ try {
             <span class="lesson__info__shorted">{{ thisLesson.Theme }}</span>
         </div>
         <hr>
-
         <div class="lesson__info">
             <span class="lesson__info__shorted">{{ thisLesson.Type }}</span>
         </div>

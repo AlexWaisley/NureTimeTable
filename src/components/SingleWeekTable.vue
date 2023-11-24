@@ -1,20 +1,17 @@
 <script setup lang="ts">
 import Lesson from './Lesson.vue';
-import { defineProps, watch } from 'vue'
+import { watch, ref } from 'vue'
 
 import { getSheduleForWeek } from "../modules/sheduleParser.ts";
 import { weekDaysList } from "../modules/dataParser.ts";
+import { useDateStore } from "../stores/date.ts";
+import TableInfo from '../modules/tableInfo.ts';
+const storeDate = useDateStore();
 
+const sheduleForWeek = ref<TableInfo[][]>(getSheduleForWeek(storeDate.date));
 
-const prop = defineProps({
-    pickedDate: Number,
-});
-
-let sheduleForWeek = getSheduleForWeek(prop.pickedDate);
-
-
-watch(() => prop.pickedDate, (newVal) => {
-    sheduleForWeek = getSheduleForWeek(newVal);
+watch(() => storeDate.date, (newVal) => {
+    sheduleForWeek.value = getSheduleForWeek(newVal);
 })
 
 </script>
