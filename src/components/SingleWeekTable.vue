@@ -2,15 +2,19 @@
 import Lesson from './Lesson.vue';
 import { watch, ref } from 'vue'
 
-import { getSheduleForWeek } from "../modules/sheduleParser.ts";
-import { weekDaysList } from "../modules/dataParser.ts";
-import { useDateStore } from "../stores/date.ts";
 import TableInfo from '../modules/tableInfo.ts';
+
+import { weekDaysList } from "../stores/tableStaticInfo.ts";
+import { useDateStore } from "../stores/date.ts";
+import { useTableDataStore } from '../stores/tableData';
+const tableData = useTableDataStore();
 const storeDate = useDateStore();
 
-const sheduleForWeek = ref<TableInfo[][]>(getSheduleForWeek(storeDate.date));
+const getSheduleForWeek = tableData.getSheduleForWeek;
 
-watch(() => storeDate.date, (newVal) => {
+const sheduleForWeek = ref<TableInfo[][]>(getSheduleForWeek(storeDate.Date));
+
+watch(() => storeDate.Date, (newVal) => {
     sheduleForWeek.value = getSheduleForWeek(newVal);
 })
 
