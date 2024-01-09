@@ -1,22 +1,13 @@
 <script setup lang="ts">
 import TableInfo from '../modules/tableInfo.ts';
-import { DictionaryDestiny } from "../modules/additionalTypes.ts";
-
-import { useTableDataStore } from '../stores/tableData.ts'
-import { useDateStore } from "../stores/date.ts";
+import { currentDate, DictionaryDestiny } from '../modules/dataParser.ts'
+import { getSheduleByDateWithoutEmpty, getLink } from '../modules/sheduleParser.ts'
 
 import { ref } from 'vue'
 
-const dateStore = useDateStore();
-const tableDataStore = useTableDataStore();
-
-const getSheduleByDateWithoutEmpty = tableDataStore.getSheduleByDateWithoutEmpty;
-const getLink = tableDataStore.getLink;
-
-
-const currDay = ref(dateStore.CurrentDate.toLocaleDateString('en-Us', { day: "2-digit", month: "long" }));
-const currWeekDay = ref(dateStore.CurrentDate.toLocaleDateString('en-Us', { weekday: "long" }));
-const currDayShedule = ref<TableInfo[]>(getSheduleByDateWithoutEmpty(dateStore.CurrentDate));
+const currDay = ref(currentDate.toLocaleDateString('en-Us', { day: "2-digit", month: "long" }));
+const currWeekDay = ref(currentDate.toLocaleDateString('en-Us', { weekday: "long" }));
+const currDayShedule = ref<TableInfo[]>(getSheduleByDateWithoutEmpty(currentDate));
 
 </script>
 <template>

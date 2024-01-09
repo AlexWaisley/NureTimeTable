@@ -2,15 +2,13 @@
 import WeekTable from './SingleWeekTable.vue';
 import DayTable from './SingleDayTable.vue';
 import { ref, watch } from 'vue';
+import { useDateStore } from "../stores/date.ts";
+const storeDate = useDateStore();
 
-import { useTableViewInfo } from "../stores/tableViewInfo.ts";
+const isTableViewDay = ref<Boolean>(storeDate.isTableViewDay);
 
-const tableViewInfo = useTableViewInfo();
-
-const isTableViewDay = ref<Boolean>(tableViewInfo.IsTableViewDay);
-
-watch(() => tableViewInfo.IsTableViewDay, () => {
-    isTableViewDay.value = tableViewInfo.IsTableViewDay;
+watch(() => storeDate.isTableViewDay, () => {
+    isTableViewDay.value = storeDate.isTableViewDay;
 })
 
 </script>

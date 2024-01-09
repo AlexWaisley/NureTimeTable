@@ -1,28 +1,22 @@
 <script setup lang="ts">
-import { UpdateTextObject } from "../modules/additionalTypes.ts";
-
-import { useDateStore } from "../stores/date.ts";
-import { useTableViewInfo } from "../stores/tableViewInfo.ts";
-import { useTableDataStore } from "../stores/tableData.ts";
-const dateStore = useDateStore();
-const tableViewInfo = useTableViewInfo();
-const tableData = useTableDataStore();
-
 import { watch, ref } from 'vue';
+import { getFirstWeekDay } from "../modules/sheduleParser.ts";
+import { UpdateTextObject } from "../modules/dataParser.ts";
+import { useDateStore } from "../stores/date.ts";
 
-const getFirstWeekDay = tableData.getFirstWeekDay;
+const storeDate = useDateStore();
 
-const isTableViewDay = ref(tableViewInfo.IsTableViewDay);
+const isTableViewDay = ref(storeDate.isTableViewDay);
 const dateString = ref("");
-const date = ref<Date>(new Date(dateStore.Date));
+const date = ref<Date>(new Date(storeDate.date));
 const viewChangeBtnText = ref(isTableViewDay.value ? "Week" : "Day");
 
-watch(() => dateStore.Date, () => {
+watch(() => storeDate.date, () => {
     updateShowedDate();
 });
 
-watch(() => tableViewInfo.IsTableViewDay, async () => {
-    isTableViewDay.value = tableViewInfo.IsTableViewDay;
+watch(() => storeDate.isTableViewDay, async () => {
+    isTableViewDay.value = storeDate.isTableViewDay;
     await updateShowedDate();
     await updateShowedTableView();
 });
@@ -40,6 +34,8 @@ const updateShowedTableView = async () => {
 const updateShowedDate = async () => {
     const formattedDate = formatDisplayDate(date.value);
     dateString.value = formattedDate;
+    /*updateText({ count: dateString.value.length, endText: dateString.value, element: dateString });
+    setTimeout(() => writeUpdatedText({ count: 1, endText: formattedDate, element: dateString }), dateString.value.length * 100);*/
 };
 
 const formatDisplayDate = (value: Date) => {
@@ -84,7 +80,7 @@ const changeDay = (period: number) => {
         period *= 7;
     }
     date.value.setDate(date.value.getDate() + period);
-    dateStore.updateDate(date.value.getTime());
+    storeDate.updateDate(date.value.getTime());
 };
 
 updateShowedDate();
@@ -107,7 +103,7 @@ updateShowedDate();
             </div>
         </div>
         <div class="view-display-container">
-            <button type="button" @click="tableViewInfo.ChangeTableView" class="view-display-btn">{{ viewChangeBtnText }}
+            <button type="button" @click="storeDate.changeTableView" class="view-display-btn">{{ viewChangeBtnText }}
             </button>
         </div>
     </div>

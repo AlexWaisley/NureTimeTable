@@ -1,18 +1,18 @@
 import { defineStore } from "pinia";
+import { currentDate } from "../modules/dataParser";
 
 export const useDateStore = defineStore({
     id:'date',
     state:()=>({
-        CurrentDate: new Date(),
-        PickedDateUnix: new Date().getTime(),        
-        Date: new Date().getTime()
+        date:currentDate.getTime(),
+        isTableViewDay: true
     }),
     actions:{
         updateDate(unixTimestamp:number){
-            this.Date = unixTimestamp;
+            this.date = unixTimestamp;
         },
-        updateUnixTimestamp(date:Date) {
-            this.PickedDateUnix = Math.floor(date.getTime());
+        changeTableView(){
+            this.isTableViewDay = !this.isTableViewDay;
         }
     }
 });
