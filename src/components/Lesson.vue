@@ -1,12 +1,23 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue';
-import TableInfo from '../modules/tableInfo.ts';
+import { Lesson } from '../models';
 
 const properti = defineProps({
-    lesson: TableInfo,
+    lesson: Object as () => Lesson,
 });
 
-const thisLesson = ref<TableInfo>(new TableInfo());
+const thisLesson = ref<Lesson>({
+    ThemeId: "-",
+    Theme: "-",
+    TypeId: "-",
+    Type: "-",
+    Room: "-",
+    StartTime: "-",
+    EndTime: "-",
+    StartDate: "-",
+    ConnectionLink: "-",
+    CheckoutLink: "-"
+});
 
 try {
     if (properti.lesson !== undefined) {
@@ -24,8 +35,6 @@ try {
 } catch (error) {
     console.log(error);
 }
-
-
 </script>
 <template>
     <div class="lesson">

@@ -1,21 +1,23 @@
 <script setup lang="ts">
-import Lesson from './Lesson.vue';
-import { watch, ref } from 'vue'
+import LessonComponent from './Lesson.vue';
+import { watch, ref, onMounted } from 'vue'
 
-import TableInfo from '../modules/tableInfo.ts';
+import { Lesson } from '../models/index.ts';
 
 import { weekDaysList } from "../stores/tableStaticInfo.ts";
-import { useDateStore } from "../stores/date.ts";
+import { useGeneralStore } from "../stores/generalInfo";
 import { useTableDataStore } from '../stores/tableData';
 const tableData = useTableDataStore();
-const storeDate = useDateStore();
+const storeDate = useGeneralStore();
 
-const getSheduleForWeek = tableData.getSheduleForWeek;
+const sheduleForWeek = ref<Lesson[][]>([]);
 
-const sheduleForWeek = ref<TableInfo[][]>(getSheduleForWeek(storeDate.Date));
+onMounted(async () => {
+    sheduleForWeek.value = await tableData.getSheduleForWeek(storeDate.Date);
+});
 
-watch(() => storeDate.Date, (newVal) => {
-    sheduleForWeek.value = getSheduleForWeek(newVal);
+watch(() => storeDate.IsUpdated, async () => {
+    sheduleForWeek.value = await tableData.getSheduleForWeek(storeDate.Date);
 })
 
 </script>
@@ -24,7 +26,7 @@ watch(() => storeDate.Date, (newVal) => {
         <div class="weekday__container" v-for="(day, index) in weekDaysList">
             <span class="weekday__text">{{ day }}</span>
             <div class="lesson_container" v-for="lessonInfo in sheduleForWeek[index]">
-                <Lesson :lesson="lessonInfo"></Lesson>
+                <LessonComponent :lesson="lessonInfo"></LessonComponent>
             </div>
         </div>
     </div>
@@ -60,8 +62,3 @@ watch(() => storeDate.Date, (newVal) => {
     box-shadow: 1.5px 1.5px 1.5px rgba(33, 0, 93, 0.34)
 }
 </style>
-
-
-
-
-

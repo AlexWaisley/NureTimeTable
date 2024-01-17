@@ -1,14 +1,9 @@
-import { DictionaryDestiny } from "./dictionaryDestiny";
-import { Lesson } from "./lesson";
 import { TableInfo } from "./tableInfo";
 import { TextObject } from "./textObject";
-
-export {
-    DictionaryDestiny,
-}
+import { Lesson } from "./lesson";
 
 export type {
-    Lesson,
     TableInfo,
     TextObject,
+    Lesson
 }

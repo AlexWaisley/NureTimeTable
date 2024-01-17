@@ -3,24 +3,21 @@ import WeekTable from './SingleWeekTable.vue';
 import DayTable from './SingleDayTable.vue';
 import { ref, watch } from 'vue';
 
-import { useTableViewInfo } from "../stores/tableViewInfo.ts";
+import { useGeneralStore } from '../stores/generalInfo';
 
-const tableViewInfo = useTableViewInfo();
+const generalStore = useGeneralStore();
 
-const isTableViewDay = ref<Boolean>(tableViewInfo.IsTableViewDay);
+const isTableViewDay = ref<Boolean>(generalStore.IsTableViewDay);
 
-watch(() => tableViewInfo.IsTableViewDay, () => {
-    isTableViewDay.value = tableViewInfo.IsTableViewDay;
+watch(() => generalStore.IsTableViewDay, () => {
+    isTableViewDay.value = generalStore.IsTableViewDay;
 })
-
 </script>
 
 <template>
     <div class="table_container">
-        <DayTable :class="{ active: isTableViewDay, disabled: !isTableViewDay }">
-        </DayTable>
-        <WeekTable :class="{ active: !isTableViewDay, disabled: isTableViewDay }">
-        </WeekTable>
+        <DayTable v-if="isTableViewDay" class="active"></DayTable>
+        <WeekTable v-else class="active"></WeekTable>
     </div>
 </template>
 

@@ -1,7 +1,8 @@
 export interface TableInfo {
-    theme: string;
-    type: string;
-    room: string;
-    startTime: string;
-    endTime: string;
+    ThemeId: string;
+    TypeId: string;
+    Room: string;
+    StartTime: string;
+    StartDate: string;
+    EndTime: string;
 }

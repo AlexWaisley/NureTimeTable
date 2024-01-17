@@ -1,34 +1,22 @@
 <script setup lang="ts">
-import { UpdateTextObject } from "../modules/additionalTypes.ts";
+import { TextObject } from "../models";
 
-import { useDateStore } from "../stores/date.ts";
-import { useTableViewInfo } from "../stores/tableViewInfo.ts";
-import { useTableDataStore } from "../stores/tableData.ts";
-const dateStore = useDateStore();
-const tableViewInfo = useTableViewInfo();
-const tableData = useTableDataStore();
+import { useGeneralStore } from "../stores/generalInfo.ts";
+const generalStore = useGeneralStore();
 
 import { watch, ref } from 'vue';
 
-const getFirstWeekDay = tableData.getFirstWeekDay;
-
-const isTableViewDay = ref(tableViewInfo.IsTableViewDay);
 const dateString = ref("");
-const date = ref<Date>(new Date(dateStore.Date));
-const viewChangeBtnText = ref(isTableViewDay.value ? "Week" : "Day");
+const viewChangeBtnText = ref(generalStore.IsTableViewDay ? "Week" : "Day");
 
-watch(() => dateStore.Date, () => {
-    updateShowedDate();
-});
 
-watch(() => tableViewInfo.IsTableViewDay, async () => {
-    isTableViewDay.value = tableViewInfo.IsTableViewDay;
+watch(() => generalStore.IsTableViewDay, async () => {
     await updateShowedDate();
     await updateShowedTableView();
 });
 
 const updateShowedTableView = async () => {
-    const endText = isTableViewDay.value ? "Week" : "Day";
+    const endText = generalStore.IsTableViewDay ? "Week" : "Day";
 
     updateText({ count: viewChangeBtnText.value.length, endText: viewChangeBtnText.value, element: viewChangeBtnText });
     setTimeout(() =>
@@ -38,28 +26,22 @@ const updateShowedTableView = async () => {
 }
 
 const updateShowedDate = async () => {
-    const formattedDate = formatDisplayDate(date.value);
-    dateString.value = formattedDate;
+    dateString.value = formatDisplayDate();
 };
 
-const formatDisplayDate = (value: Date) => {
-    if (isTableViewDay.value) {
-        const currMonthLongName = value.toLocaleString('en-us', { month: 'long' });
-        return `${value.getDate()} ${currMonthLongName}`;
+const formatDisplayDate = (): string => {
+    if (generalStore.IsTableViewDay) {
+        const formatedDate = generalStore.Date.format("DD MMMM");
+        return formatedDate;
     } else {
-        const firstWeekDay = getFirstWeekDay(value);
-        const lastWeekDay = new Date(firstWeekDay);
-        const weekPeriod = 5;
-        lastWeekDay.setDate(lastWeekDay.getDate() + weekPeriod);
-
-        const firstWeekDayMonth = firstWeekDay.toLocaleString('en-us', { month: 'long' });
-        const lastWeekDayMonth = lastWeekDay.toLocaleString('en-us', { month: 'long' });
-
-        return `${firstWeekDay.getDate()} ${firstWeekDayMonth} - ${lastWeekDay.getDate()} ${lastWeekDayMonth}`;
+        const tempDate = generalStore.Date.clone();
+        const firstWeekDay = tempDate.startOf('isoWeek').format("DD MMMM");
+        const lastWeekDay = tempDate.endOf('isoWeek').format("DD MMMM");
+        return `${firstWeekDay} - ${lastWeekDay}`;
     }
 };
 
-function writeUpdatedText(obj: UpdateTextObject): void {
+function writeUpdatedText(obj: TextObject): void {
     const { count, endText, element } = obj;
 
     if (count <= endText.length) {
@@ -69,7 +51,7 @@ function writeUpdatedText(obj: UpdateTextObject): void {
     }
 }
 
-function updateText(obj: UpdateTextObject): void {
+function updateText(obj: TextObject): void {
     const { count, endText, element } = obj;
 
     if (count > 0) {
@@ -80,11 +62,10 @@ function updateText(obj: UpdateTextObject): void {
 }
 
 const changeDay = (period: number) => {
-    if (!isTableViewDay.value) {
-        period *= 7;
-    }
-    date.value.setDate(date.value.getDate() + period);
-    dateStore.updateDate(date.value.getTime());
+    period = generalStore.IsTableViewDay ? period : period * 7;
+
+    generalStore.updateDate(period);
+    updateShowedDate();
 };
 
 updateShowedDate();
@@ -107,7 +88,7 @@ updateShowedDate();
             </div>
         </div>
         <div class="view-display-container">
-            <button type="button" @click="tableViewInfo.ChangeTableView" class="view-display-btn">{{ viewChangeBtnText }}
+            <button type="button" @click="generalStore.ChangeTableView" class="view-display-btn">{{ viewChangeBtnText }}
             </button>
         </div>
     </div>

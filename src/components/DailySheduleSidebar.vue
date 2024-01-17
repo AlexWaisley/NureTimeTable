@@ -1,24 +1,22 @@
 <script setup lang="ts">
-import TableInfo from '../modules/tableInfo.ts';
-import { DictionaryDestiny } from "../modules/additionalTypes.ts";
+import { Lesson } from '../models';
 
 import { useTableDataStore } from '../stores/tableData.ts'
-import { useDateStore } from "../stores/date.ts";
+import { useGeneralStore } from '../stores/generalInfo';
 
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
-const dateStore = useDateStore();
+const generalStore = useGeneralStore();
 const tableDataStore = useTableDataStore();
 
-const getSheduleByDateWithoutEmpty = tableDataStore.getSheduleByDateWithoutEmpty;
-const getLink = tableDataStore.getLink;
-
-
-const currDay = ref(dateStore.CurrentDate.toLocaleDateString('en-Us', { day: "2-digit", month: "long" }));
-const currWeekDay = ref(dateStore.CurrentDate.toLocaleDateString('en-Us', { weekday: "long" }));
-const currDayShedule = ref<TableInfo[]>(getSheduleByDateWithoutEmpty(dateStore.CurrentDate));
-
+const currDay = ref(generalStore.CurrentDate.format("MMMM DD"));
+const currWeekDay = ref(generalStore.CurrentDate.format("dddd"));
+const currDayShedule = ref<Lesson[]>([]);
+onMounted(async () => {
+    currDayShedule.value = await tableDataStore.getSheduleByDateWithoutEmpty(generalStore.CurrentDate);
+});
 </script>
+
 <template>
     <div class="current_day_info">
         <div class="day__data">
@@ -39,11 +37,10 @@ const currDayShedule = ref<TableInfo[]>(getSheduleByDateWithoutEmpty(dateStore.C
             <span class="lesson_list_text">{{ lesson.Type }}</span>
             <br>
             <br>
-            <a :href="getLink(lesson, DictionaryDestiny.LINK_CONNECT)" target="_blank" class="lesson_list_text">Connect</a>
+            <a :href="lesson.ConnectionLink" target="_blank" class="lesson_list_text">Connect</a>
             <br>
             <br>
-            <a :href="getLink(lesson, DictionaryDestiny.LINK_CHECKOUT)" target="_blank"
-                class="lesson_list_text">Checkout</a>
+            <a :href="lesson.CheckoutLink" target="_blank" class="lesson_list_text">Checkout</a>
         </div>
     </div>
 </template>
