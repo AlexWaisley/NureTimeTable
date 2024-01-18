@@ -5,7 +5,7 @@ import { api } from "../api";
 
 import { ref, Ref, onMounted } from 'vue'
 import moment from "moment";
-import { initRefs } from '../storageUtils';
+import { initRefs, setWithExpiry, getWithExpiry } from '../storageUtils';
 
 export const useTableDataStore = defineStore('tableData', () => {
     let connectionLinks: Ref<Record<string, string>> = ref({});
@@ -34,32 +34,32 @@ export const useTableDataStore = defineStore('tableData', () => {
 
             return dateA.isBefore(dateB) ? -1 : dateA.isAfter(dateB) ? 1 : 0;
         });
-        localStorage.setItem('lessonsList', JSON.stringify(lessonsList.value));
+        setWithExpiry('lessonsList', lessonsList.value, 17);
     }
 
     const getConnectionLinks = async () => {
         connectionLinks.value = await api.getConnectionLinks();
-        localStorage.setItem('connectionLinks', JSON.stringify(connectionLinks.value));
+        setWithExpiry('connectionLinks', connectionLinks.value, 17);
     }
     const getCheckoutLinks = async () => {
         checkoutLinks.value = await api.getCheckoutLinks();
-        localStorage.setItem('checkoutLinks', JSON.stringify(checkoutLinks.value));
+        setWithExpiry('checkoutLinks', checkoutLinks.value, 17);
     }
     const getLessonThemes = async () => {
         lessonThemes.value = await api.getThemes();
-        localStorage.setItem('lessonThemes', JSON.stringify(lessonThemes.value));
+        setWithExpiry('lessonThemes', lessonThemes.value, 17);
     }
     const getLessonTypes = async () => {
         lessonTypes.value = await api.getTypes();
-        localStorage.setItem('lessonTypes', JSON.stringify(lessonTypes.value));
+        setWithExpiry('lessonTypes', lessonTypes.value, 17);
     }
     const getLessonToCheckLinks = async () => {
         lessonToCheckoutLinks.value = await api.getLessonToCheckoutLinks();
-        localStorage.setItem('lessonToCheckoutLinks', JSON.stringify(lessonToCheckoutLinks.value));
+        setWithExpiry('lessonToCheckoutLinks', lessonToCheckoutLinks.value, 17);
     }
     const getLessonToConnectLinks = async () => {
         lessonToConnectionLinks.value = await api.getLessonToConnectionLinks();
-        localStorage.setItem('lessonToConnectionLinks', JSON.stringify(lessonToConnectionLinks.value));
+        setWithExpiry('lessonToConnectionLinks', lessonToConnectionLinks.value, 17);
     }
 
     const getData = async () => {
@@ -104,12 +104,11 @@ export const useTableDataStore = defineStore('tableData', () => {
     }
 
     const loadFromLocalStorage = <T>(key: string, targetRef: Ref<T>) => {
-        const storedData = localStorage.getItem(key);
+        const storedData = getWithExpiry(key);
 
         if (storedData !== null) {
             try {
-                const parsedData: T = JSON.parse(storedData);
-                targetRef.value = parsedData;
+                targetRef.value = storedData;
             } catch (error) {
                 console.error(`Error parsing JSON for key ${key}:`, error);
             }

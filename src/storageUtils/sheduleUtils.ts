@@ -22,6 +22,7 @@ const initRefs = () => {
     lessonToConnectionLinks = ref(tableDataStore.lessonToConnectionLinks);
     lessonsList = ref(tableDataStore.lessonsList);
 };
+
 const getSheduleByDateWithoutEmpty = async (date: moment.Moment): Promise<Lesson[]> => {
     const tableDataStore = useTableDataStore();
     let resultArr = ref<Lesson[]>([]);
