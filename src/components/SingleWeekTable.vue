@@ -3,21 +3,20 @@ import LessonComponent from './Lesson.vue';
 import { watch, ref, onMounted } from 'vue'
 
 import { Lesson } from '../models/index.ts';
+import { getSheduleForWeek } from '../storageUtils';
 
 import { weekDaysList } from "../stores/tableStaticInfo.ts";
 import { useGeneralStore } from "../stores/generalInfo";
-import { useTableDataStore } from '../stores/tableData';
-const tableData = useTableDataStore();
 const storeDate = useGeneralStore();
 
 const sheduleForWeek = ref<Lesson[][]>([]);
 
 onMounted(async () => {
-    sheduleForWeek.value = await tableData.getSheduleForWeek(storeDate.Date);
+    sheduleForWeek.value = await getSheduleForWeek(storeDate.Date);
 });
 
 watch(() => storeDate.IsUpdated, async () => {
-    sheduleForWeek.value = await tableData.getSheduleForWeek(storeDate.Date);
+    sheduleForWeek.value = await getSheduleForWeek(storeDate.Date);
 })
 
 </script>

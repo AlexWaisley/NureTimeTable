@@ -3,20 +3,19 @@ import { Lesson } from '../models';
 
 import LessonComponent from './Lesson.vue';
 import { ref, watch, onMounted } from 'vue'
+import { getSheduleForDay } from '../storageUtils';
 
 import { useGeneralStore } from '../stores/generalInfo';
-import { useTableDataStore } from '../stores/tableData';
 const generalStore = useGeneralStore();
-const tableData = useTableDataStore();
 
 const todayLessons = ref<Lesson[]>([]);
 
 onMounted(async () => {
-    todayLessons.value = await tableData.getSheduleForDay(generalStore.Date);
+    todayLessons.value = await getSheduleForDay(generalStore.Date);
 });
 
 watch(() => generalStore.IsUpdated, async () => {
-    todayLessons.value = await tableData.getSheduleForDay(generalStore.Date);
+    todayLessons.value = await getSheduleForDay(generalStore.Date);
 });
 
 </script>
