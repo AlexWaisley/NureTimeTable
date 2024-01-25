@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { TextObject } from "../models";
+import moment from "moment";
 
 import { useGeneralStore } from "../stores/generalInfo.ts";
 const generalStore = useGeneralStore();
@@ -10,38 +11,33 @@ const dateString = ref("");
 const viewChangeBtnText = ref(generalStore.IsTableViewDay ? "Week" : "Day");
 
 
-watch(() => generalStore.IsTableViewDay, async () => {
-    await updateShowedDate();
-    await updateShowedTableView();
-});
-
-const updateShowedTableView = async () => {
+const updateShowedTableView = () => {
     const endText = generalStore.IsTableViewDay ? "Week" : "Day";
 
-    updateText({ count: viewChangeBtnText.value.length, endText: viewChangeBtnText.value, element: viewChangeBtnText });
+    eraseText({ count: viewChangeBtnText.value.length, endText: viewChangeBtnText.value, element: viewChangeBtnText });
     setTimeout(() =>
         writeUpdatedText({ count: 1, endText, element: viewChangeBtnText }),
         viewChangeBtnText.value.length * 100
     );
 }
 
-const updateShowedDate = async () => {
+const updateShowedDate = () => {
     dateString.value = formatDisplayDate();
 };
 
 const formatDisplayDate = (): string => {
     if (generalStore.IsTableViewDay) {
-        const formatedDate = generalStore.Date.format("DD MMMM");
+        const formatedDate = moment.unix(generalStore.Date).format("DD MMMM");
         return formatedDate;
     } else {
-        const tempDate = generalStore.Date.clone();
+        const tempDate = moment.unix(generalStore.Date);
         const firstWeekDay = tempDate.startOf('isoWeek').format("DD MMMM");
         const lastWeekDay = tempDate.endOf('isoWeek').format("DD MMMM");
         return `${firstWeekDay} - ${lastWeekDay}`;
     }
 };
 
-function writeUpdatedText(obj: TextObject): void {
+const writeUpdatedText = (obj: TextObject): void => {
     const { count, endText, element } = obj;
 
     if (count <= endText.length) {
@@ -51,13 +47,12 @@ function writeUpdatedText(obj: TextObject): void {
     }
 }
 
-function updateText(obj: TextObject): void {
+const eraseText = (obj: TextObject): void => {
     const { count, endText, element } = obj;
-
     if (count > 0) {
         element.value = endText.slice(0, count);
         obj.count--;
-        setTimeout(() => updateText(obj), 100);
+        setTimeout(() => eraseText(obj), 100);
     }
 }
 
@@ -69,6 +64,12 @@ const changeDay = (period: number) => {
 };
 
 updateShowedDate();
+
+watch(() => generalStore.IsTableViewDay, () => {
+    updateShowedDate();
+    updateShowedTableView();
+});
+
 </script>
 <template>
     <div class="app_header">

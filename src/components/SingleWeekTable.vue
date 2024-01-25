@@ -1,30 +1,16 @@
 <script setup lang="ts">
 import LessonComponent from './Lesson.vue';
-import { watch, ref, onMounted } from 'vue'
-
-import { Lesson } from '../models/index.ts';
-import { getSheduleForWeek } from '../storageUtils';
+import { useTableDataStore } from '../stores/tableData';
 
 import { weekDaysList } from "../stores/tableStaticInfo.ts";
-import { useGeneralStore } from "../stores/generalInfo";
-const storeDate = useGeneralStore();
-
-const sheduleForWeek = ref<Lesson[][]>([]);
-
-onMounted(async () => {
-    sheduleForWeek.value = await getSheduleForWeek(storeDate.Date);
-});
-
-watch(() => storeDate.IsUpdated, async () => {
-    sheduleForWeek.value = await getSheduleForWeek(storeDate.Date);
-})
+const tableDataStore = useTableDataStore();
 
 </script>
 <template>
     <div class="week__container">
         <div class="weekday__container" v-for="(day, index) in weekDaysList">
             <span class="weekday__text">{{ day }}</span>
-            <div class="lesson_container" v-for="lessonInfo in sheduleForWeek[index]">
+            <div class="lesson_container" v-for="lessonInfo in tableDataStore.tableForSelectedWeekDate[index]">
                 <LessonComponent :lesson="lessonInfo"></LessonComponent>
             </div>
         </div>

@@ -1,23 +1,33 @@
 <script setup lang="ts">
 import WeekTable from './SingleWeekTable.vue';
 import DayTable from './SingleDayTable.vue';
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 
 import { useGeneralStore } from '../stores/generalInfo';
 
 const generalStore = useGeneralStore();
 
-const isTableViewDay = ref<Boolean>(generalStore.IsTableViewDay);
+const isTableViewDay = ref<boolean>(generalStore.IsTableViewDay);
 
-watch(() => generalStore.IsTableViewDay, () => {
-    isTableViewDay.value = generalStore.IsTableViewDay;
+const viewDayTable = computed(() => ({
+    active: isTableViewDay.value,
+    disabled: !isTableViewDay.value
+}));
+
+const viewWeekTable = computed(() => ({
+    active: !isTableViewDay.value,
+    disabled: isTableViewDay.value
+}));
+
+watch(() => generalStore.IsTableViewDay, (newValue) => {
+    isTableViewDay.value = newValue;
 })
 </script>
 
 <template>
     <div class="table_container">
-        <DayTable v-if="isTableViewDay" class="active"></DayTable>
-        <WeekTable v-else class="active"></WeekTable>
+        <DayTable :class="viewDayTable" />
+        <WeekTable :class="viewWeekTable" />
     </div>
 </template>
 

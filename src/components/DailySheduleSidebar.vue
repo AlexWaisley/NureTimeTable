@@ -1,31 +1,21 @@
 <script setup lang="ts">
-import { Lesson } from '../models';
-
 import { useGeneralStore } from '../stores/generalInfo';
-import { getSheduleByDateWithoutEmpty } from '../storageUtils';
-
-import { ref, onMounted } from 'vue'
+import { useTableDataStore } from '../stores/tableData';
 
 const generalStore = useGeneralStore();
-
-const currDay = ref(generalStore.CurrentDate.format("MMMM DD"));
-const currWeekDay = ref(generalStore.CurrentDate.format("dddd"));
-const currDayShedule = ref<Lesson[]>([]);
-onMounted(async () => {
-    currDayShedule.value = await getSheduleByDateWithoutEmpty(generalStore.CurrentDate);
-});
+const tableDataStore = useTableDataStore();
 </script>
 
 <template>
     <div class="current_day_info">
         <div class="day__data">
-            <span class="current__weekday">{{ currDay }}</span>
+            <span class="current__weekday">{{ generalStore.CurrentDate.format("MMMM DD") }}</span>
             <br>
             <br>
-            <span class="current__weekday">{{ currWeekDay }}</span>
+            <span class="current__weekday">{{ generalStore.CurrentDate.format("dddd") }}</span>
         </div>
 
-        <div class="lesson_list" v-for="lesson in currDayShedule">
+        <div class="lesson_list" v-for="lesson in tableDataStore.tableForCurrentDay">
             <hr>
             <span class="lesson_list_text">{{ lesson.StartTime }}</span>
             <br>

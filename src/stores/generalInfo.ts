@@ -2,20 +2,19 @@ import moment from "moment";
 import { defineStore } from "pinia";
 import { ref } from 'vue'
 
-export const useGeneralStore = defineStore('GeneralStore', () => {
-    let CurrentDate = moment();
-    let Date = moment();
-    let IsTableViewDay = ref(true);
-    let IsUpdated = ref(false);
+export const useGeneralStore = defineStore('generalStore', () => {
+    const CurrentDate = ref(moment());
+    const Date = ref(moment().unix());
+    const IsTableViewDay = ref(true);
 
     const updateDate = (daysToAdd: number) => {
-        Date.add(daysToAdd, 'days');
-        IsUpdated.value = !IsUpdated.value;
+        Date.value += daysToAdd * 86400;
     };
 
     const ChangeTableView = () => {
         IsTableViewDay.value = !IsTableViewDay.value;
     };
 
-    return { CurrentDate, IsUpdated, Date, IsTableViewDay, ChangeTableView, updateDate };
+
+    return { CurrentDate, Date, IsTableViewDay, ChangeTableView, updateDate };
 });

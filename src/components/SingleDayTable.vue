@@ -1,27 +1,14 @@
 <script setup lang="ts">
-import { Lesson } from '../models';
-
 import LessonComponent from './Lesson.vue';
-import { ref, watch, onMounted } from 'vue'
-import { getSheduleForDay } from '../storageUtils';
+import { useTableDataStore } from '../stores/tableData';
 
-import { useGeneralStore } from '../stores/generalInfo';
-const generalStore = useGeneralStore();
-
-const todayLessons = ref<Lesson[]>([]);
-
-onMounted(async () => {
-    todayLessons.value = await getSheduleForDay(generalStore.Date);
-});
-
-watch(() => generalStore.IsUpdated, async () => {
-    todayLessons.value = await getSheduleForDay(generalStore.Date);
-});
+const tableDataStore = useTableDataStore();
 
 </script>
 <template>
     <div class="day_lessons_container">
-        <LessonComponent v-for="lesson_info in todayLessons" :lesson="lesson_info"> </LessonComponent>
+        <LessonComponent v-for="lesson_info in tableDataStore.tableForSelectedDate" :lesson="lesson_info">
+        </LessonComponent>
     </div>
 </template>
 <style scoped>
