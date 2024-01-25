@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 
-import { TableInfo, Lesson, StoreItem } from "../models";
+import { TableInfo, Lesson, StoreItem, TableState } from "../models";
 import { api } from "../api";
 
 import { timeTable } from '../stores/tableStaticInfo';
@@ -10,17 +10,20 @@ import moment from "moment";
 import { useGeneralStore } from "./generalInfo";
 import { watch } from "vue";
 
+const EXPIRY_DAYS = 17;
+const STORAGE_KEY = 'TableInfo';
+
 export const useTableDataStore = defineStore('tableData', () => {
-    const generalStore = useGeneralStore();
     //-----------VARIABLES-----------//
-    const tableInfo = reactive({
-        connectionLinks: ref<Record<string, string>>({}),
-        checkoutLinks: ref<Record<string, string>>({}),
-        lessonThemes: ref<Record<string, string>>({}),
-        lessonTypes: ref<Record<string, string>>({}),
-        lessonToCheckoutLinks: ref<Record<string, string>>({}),
-        lessonToConnectionLinks: ref<Record<string, string>>({}),
-        lessonsList: ref<TableInfo[]>([])
+    const generalStore = useGeneralStore();
+    const tableState = reactive<TableState>({
+        connectionLinks: {},
+        checkoutLinks: {},
+        lessonThemes: {},
+        lessonTypes: {},
+        lessonToCheckoutLinks: {},
+        lessonToConnectionLinks: {},
+        lessonsList: []
     });
 
     const isReady = ref(false);
@@ -40,14 +43,14 @@ export const useTableDataStore = defineStore('tableData', () => {
 
     const getData = async () => {
         if (!isLocalStorageHaveData()) {
-            tableInfo.lessonToConnectionLinks = await api.getLessonToConnectionLinks();
-            tableInfo.lessonToCheckoutLinks = await api.getLessonToCheckoutLinks();
-            tableInfo.lessonTypes = await api.getTypes();
-            tableInfo.lessonThemes = await api.getThemes();
-            tableInfo.checkoutLinks = await api.getCheckoutLinks();
-            tableInfo.connectionLinks = await api.getConnectionLinks();
+            tableState.lessonToConnectionLinks = await api.getLessonToConnectionLinks();
+            tableState.lessonToCheckoutLinks = await api.getLessonToCheckoutLinks();
+            tableState.lessonTypes = await api.getTypes();
+            tableState.lessonThemes = await api.getThemes();
+            tableState.checkoutLinks = await api.getCheckoutLinks();
+            tableState.connectionLinks = await api.getConnectionLinks();
             await getLessonList();
-            setWithExpiry('TableInfo', tableInfo, 17);
+            setWithExpiry(STORAGE_KEY, tableState, EXPIRY_DAYS);
         }
     };
 
@@ -55,7 +58,7 @@ export const useTableDataStore = defineStore('tableData', () => {
         date = date || moment();
         const tempData = await api.getSchedule(date);
 
-        const updatedLessonList = tableInfo.lessonsList.concat(tempData);
+        const updatedLessonList = tableState.lessonsList.concat(tempData);
 
         const uniqueTempData = Array.from(new Set(updatedLessonList.map(item =>
             `${item.StartDate}-${item.StartTime}`
@@ -67,7 +70,7 @@ export const useTableDataStore = defineStore('tableData', () => {
 
         const filteredUniqueTempData = uniqueTempData;
 
-        tableInfo.lessonsList = filteredUniqueTempData.sort((a, b) => {
+        tableState.lessonsList = filteredUniqueTempData.sort((a, b) => {
             const dateA = moment(`${a?.StartDate} ${a?.StartTime}`, 'DD.MM.yyyy HH:mm');
             const dateB = moment(`${b?.StartDate} ${b?.StartTime}`, 'DD.MM.yyyy HH:mm');
             return dateA.isBefore(dateB) ? -1 : dateA.isAfter(dateB) ? 1 : 0;
@@ -78,46 +81,35 @@ export const useTableDataStore = defineStore('tableData', () => {
 
     //-----------LOCALSTORAGE METHODS-----------//
     const isLocalStorageHaveData = (): boolean => {
-        const storedData = getWithExpiry('TableInfo');
-
+        const storedData = getWithExpiry(STORAGE_KEY);
         if (storedData !== null) {
             try {
-                tableInfo.connectionLinks = storedData.value.connectionLinks;
-                tableInfo.checkoutLinks = storedData.value.checkoutLinks;
-                tableInfo.lessonThemes = storedData.value.lessonThemes;
-                tableInfo.lessonTypes = storedData.value.lessonTypes;
-                tableInfo.lessonToCheckoutLinks = storedData.value.lessonToCheckoutLinks;
-                tableInfo.lessonToConnectionLinks = storedData.value.lessonToConnectionLinks;
-                tableInfo.lessonsList = storedData.value.lessonsList;
+                tableState.connectionLinks = storedData.value.connectionLinks;
+                tableState.checkoutLinks = storedData.value.checkoutLinks;
+                tableState.lessonThemes = storedData.value.lessonThemes;
+                tableState.lessonTypes = storedData.value.lessonTypes;
+                tableState.lessonToCheckoutLinks = storedData.value.lessonToCheckoutLinks;
+                tableState.lessonToConnectionLinks = storedData.value.lessonToConnectionLinks;
+                tableState.lessonsList = storedData.value.lessonsList;
             } catch (error) {
                 console.error(`Error while assignment for key TableInfo:`, error);
             }
         }
 
         let haveData = true;
-
-        for (const key in tableInfo) {
-            if (tableInfo[key as keyof typeof tableInfo] && Object.keys(tableInfo[key as keyof typeof tableInfo]).length === 0) {
+        for (const key in tableState) {
+            if (tableState[key as keyof typeof tableState] && Object.keys(tableState[key as keyof typeof tableState]).length === 0) {
                 haveData = false;
             }
         }
+
         return haveData;
     }
 
-    const setWithExpiry = (key: string, value: any, ttl: number) => {
-        const now = moment();
-        const plainTableInfo = {
-            connectionLinks: value.connectionLinks,
-            checkoutLinks: value.checkoutLinks,
-            lessonThemes: value.lessonThemes,
-            lessonTypes: value.lessonTypes,
-            lessonToCheckoutLinks: value.lessonToCheckoutLinks,
-            lessonToConnectionLinks: value.lessonToConnectionLinks,
-            lessonsList: value.lessonsList
-        };
+    const setWithExpiry = (key: string, value: TableState, ttl: number) => {
         const item: StoreItem = {
-            value: plainTableInfo,
-            expiry: now.add(ttl, "days").toISOString(),
+            value: value,
+            expiry: moment().add(ttl, "days").toISOString(),
         };
         localStorage.setItem(key, JSON.stringify(item));
     }
@@ -128,8 +120,7 @@ export const useTableDataStore = defineStore('tableData', () => {
             return null;
         }
         const item: StoreItem = JSON.parse(itemStr);
-        const now = moment();
-        if (now.isAfter(item.expiry)) {
+        if (moment().isAfter(item.expiry)) {
             localStorage.removeItem(key);
             console.log("EXPIRED!");
             return null;
@@ -140,30 +131,25 @@ export const useTableDataStore = defineStore('tableData', () => {
 
     //-----------SHEDULE METHODS-----------//
     const getSheduleByDateWithoutEmpty = async (date: moment.Moment): Promise<Lesson[]> => {
-        const resultArr = ref<Lesson[]>([]);
-        let resultInfoArr = tableInfo.lessonsList.filter((elem) => elem.StartDate === date.format("DD.MM.yyyy"));
+        let resultInfoArr = tableState.lessonsList.filter((elem) => elem.StartDate === date.format("DD.MM.yyyy"));
         if (resultInfoArr.length === 0) {
             await getLessonList(date);
-            resultInfoArr = tableInfo.lessonsList.filter((elem) => elem.StartDate === date.format("DD.MM.yyyy"));
+            resultInfoArr = tableState.lessonsList.filter((elem) => elem.StartDate === date.format("DD.MM.yyyy"));
         }
 
-        resultInfoArr.forEach((info) => resultArr.value.push(getFullLessonInfo(info)));
-
-        return resultArr.value;
+        return resultInfoArr.map(info => getFullLessonInfo(info));
     }
 
     const getSheduleForDay = async (date: moment.Moment): Promise<Lesson[]> => {
-        const resultArr = ref<Lesson[]>([]);
-        const lessonsForDay = ref<TableInfo[]>([]);
-        lessonsForDay.value = tableInfo.lessonsList.filter((elem) => elem.StartDate === date.format("DD.MM.yyyy"));
+        let lessonsForDay: TableInfo[] = tableState.lessonsList.filter((elem) => elem.StartDate === date.format("DD.MM.yyyy"));
 
-        if (lessonsForDay.value.length === 0) {
+        if (lessonsForDay.length === 0) {
             await getLessonList(date);
-            lessonsForDay.value = tableInfo.lessonsList.filter((elem) => elem.StartDate === date.format("DD.MM.yyyy"));
+            lessonsForDay = tableState.lessonsList.filter((elem) => elem.StartDate === date.format("DD.MM.yyyy"));
         }
 
-        resultArr.value = timeTable.map(([startTime, endTime]) => {
-            const tempLesson = lessonsForDay.value.find((elem) => elem.StartTime === startTime) || {
+        const resultArr = timeTable.map(([startTime, endTime]) => {
+            const tempLesson = lessonsForDay.find((elem) => elem.StartTime === startTime) || {
                 ThemeId: "-",
                 TypeId: "-",
                 Room: "-",
@@ -174,15 +160,14 @@ export const useTableDataStore = defineStore('tableData', () => {
             return getFullLessonInfo(tempLesson);
         });
 
-        return resultArr.value;
+        return resultArr;
     }
 
     const getSheduleForWeek = async (date: moment.Moment): Promise<Lesson[][]> => {
         let resultArr = ref<Lesson[][]>([]);
         let firstDate = date.clone().startOf("isoWeek");
         for (let i = 0; i < 7; i++) {
-            let lessonsForDay = await getSheduleForDay(firstDate);
-            resultArr.value.push([...lessonsForDay]);
+            resultArr.value.push(await getSheduleForDay(firstDate));
             firstDate.add(1, 'days');
         }
         return resultArr.value;
@@ -202,10 +187,10 @@ export const useTableDataStore = defineStore('tableData', () => {
             CheckoutLink: "-"
         };
         if (lesson.ThemeId !== "-") {
-            lesson.Theme = tableInfo.lessonThemes[lesson.ThemeId];
-            lesson.Type = tableInfo.lessonTypes[lesson.TypeId];
-            lesson.CheckoutLink = tableInfo.checkoutLinks[tableInfo.lessonToCheckoutLinks[`${lesson.ThemeId} ${lesson.TypeId}`]] ?? "-";
-            lesson.ConnectionLink = tableInfo.connectionLinks[tableInfo.lessonToConnectionLinks[`${lesson.ThemeId} ${lesson.TypeId}`]] ?? "-";
+            lesson.Theme = tableState.lessonThemes[lesson.ThemeId];
+            lesson.Type = tableState.lessonTypes[lesson.TypeId];
+            lesson.CheckoutLink = tableState.checkoutLinks[tableState.lessonToCheckoutLinks[`${lesson.ThemeId} ${lesson.TypeId}`]] ?? "-";
+            lesson.ConnectionLink = tableState.connectionLinks[tableState.lessonToConnectionLinks[`${lesson.ThemeId} ${lesson.TypeId}`]] ?? "-";
         }
         return lesson;
     }
@@ -214,10 +199,6 @@ export const useTableDataStore = defineStore('tableData', () => {
     watch(() => generalStore.Date, async (newValue) => {
         if (!isReady) return;
         tableForSelectedDate.value = await getSheduleForDay(moment.unix(newValue));
-    });
-
-    watch(() => generalStore.Date, async (newValue) => {
-        if (!isReady) return;
         tableForSelectedWeekDate.value = await getSheduleForWeek(moment.unix(newValue));
     });
 

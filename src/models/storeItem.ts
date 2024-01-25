@@ -1,4 +1,6 @@
+import { TableState } from ".";
+
 export interface StoreItem {
-    value: any;
+    value: TableState;
     expiry: string;
 }

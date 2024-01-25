@@ -19,22 +19,13 @@ const thisLesson = ref<Lesson>({
     CheckoutLink: "-"
 });
 
-try {
-    if (properti.lesson !== undefined) {
-        thisLesson.value = properti.lesson;
-
-        watchEffect(() => {
-            if (properti.lesson !== undefined) {
-                thisLesson.value = properti.lesson;
-            }
-        });
+watchEffect(() => {
+    if (properti.lesson) {
+        thisLesson.value = { ...properti.lesson };
+    } else {
+        console.error("Lesson properti in lesson component is undefined");
     }
-    else {
-        throw new Error("Lesson properti in lesson component is undefined");
-    }
-} catch (error) {
-    console.log(error);
-}
+});
 </script>
 <template>
     <div class="lesson">

@@ -7,9 +7,7 @@ const generalStore = useGeneralStore();
 
 import { watch, ref } from 'vue';
 
-const dateString = ref("");
 const viewChangeBtnText = ref(generalStore.IsTableViewDay ? "Week" : "Day");
-
 
 const updateShowedTableView = () => {
     const endText = generalStore.IsTableViewDay ? "Week" : "Day";
@@ -26,11 +24,10 @@ const updateShowedDate = () => {
 };
 
 const formatDisplayDate = (): string => {
+    const tempDate = moment.unix(generalStore.Date);
     if (generalStore.IsTableViewDay) {
-        const formatedDate = moment.unix(generalStore.Date).format("DD MMMM");
-        return formatedDate;
+        return tempDate.format("DD MMMM");
     } else {
-        const tempDate = moment.unix(generalStore.Date);
         const firstWeekDay = tempDate.startOf('isoWeek').format("DD MMMM");
         const lastWeekDay = tempDate.endOf('isoWeek').format("DD MMMM");
         return `${firstWeekDay} - ${lastWeekDay}`;
@@ -40,19 +37,19 @@ const formatDisplayDate = (): string => {
 const writeUpdatedText = (obj: TextObject): void => {
     const { count, endText, element } = obj;
 
-    if (count <= endText.length) {
+    while (count <= endText.length) {
         element.value = endText.slice(0, count);
         obj.count++;
-        setTimeout(() => writeUpdatedText(obj), 100);
+        setTimeout(() => { }, 100);
     }
 }
 
 const eraseText = (obj: TextObject): void => {
     const { count, endText, element } = obj;
-    if (count > 0) {
+    while (count > 0) {
         element.value = endText.slice(0, count);
         obj.count--;
-        setTimeout(() => eraseText(obj), 100);
+        setTimeout(() => { }, 100);
     }
 }
 
@@ -63,13 +60,12 @@ const changeDay = (period: number) => {
     updateShowedDate();
 };
 
-updateShowedDate();
-
 watch(() => generalStore.IsTableViewDay, () => {
     updateShowedDate();
     updateShowedTableView();
 });
 
+const dateString = ref(formatDisplayDate());
 </script>
 <template>
     <div class="app_header">
