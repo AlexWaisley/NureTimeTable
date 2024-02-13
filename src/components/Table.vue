@@ -31,52 +31,27 @@ watch(() => generalStore.IsTableViewDay, (newValue) => {
     </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .table_container {
-    display: grid;
     margin: 1rem;
-    padding: 0 1rem;
+    display: grid;
+    overflow-y: auto;
 }
 
 .active {
-    animation: fadein 1s linear 1 normal forwards;
+    transition: transform 1s ease, opacity 1s ease;
+    transform: scaleY(1);
+    transform: scaleX(1);
+    opacity: 1;
 }
 
 .disabled {
-    animation: fadeout .7s linear 1 normal forwards;
+    transition: transform 0.7s ease, opacity 0.7s ease;
+    transform: scaleY(0);
+    transform: scaleX(0);
+    opacity: 0;
     position: absolute;
     overflow: hidden;
-}
-
-@keyframes fadein {
-    from {
-        height: 0;
-        opacity: 0;
-    }
-
-    to {
-        height: 100%;
-        opacity: 1;
-    }
-}
-
-@keyframes fadeout {
-    from {
-        height: 100%;
-        opacity: 1;
-    }
-
-    to {
-        height: 0;
-        opacity: 0;
-    }
-}
-
-
-@media screen and (min-width:590px) {
-    .table_container {
-        overflow-y: auto;
-    }
 }
 </style>
 

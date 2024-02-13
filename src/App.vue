@@ -10,5 +10,3 @@ const tableStore = useTableDataStore();
   <Header v-if="tableStore.isReady"></Header>
   <Main v-if="tableStore.isReady"></Main>
 </template>
-
-<style scoped></style>

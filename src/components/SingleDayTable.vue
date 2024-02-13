@@ -11,21 +11,12 @@ const tableDataStore = useTableDataStore();
         </LessonComponent>
     </div>
 </template>
-<style scoped>
-.day_lessons_container {
-    display: grid;
-    gap: 0.9rem;
-    height: 90%;
-    grid-template-rows: repeat(6, 1fr);
-    padding: 0 5px;
-    transition: all .5s ease;
-    opacity: 0;
-}
+<style lang="scss" scoped>
+@use '../styles/mixin' as mixin;
 
-@media screen and (min-width:590px) {
-    .day_lessons_container {
-        min-width: 550px;
-    }
+.day_lessons_container {
+    @include mixin.tableContainerBase;
+    grid-template-rows: repeat(6, 1fr);
 }
 </style>
 

@@ -91,53 +91,45 @@ const dateString = ref(formatDisplayDate());
         </div>
     </div>
 </template>
-<style scoped>
+<style lang="scss" scoped>
+@use '../styles/mixin' as mixin;
+@use '../styles/variables' as variables;
+
 .app_header {
     display: grid;
     max-height: 100%;
     width: 100%;
-    box-shadow: 2px 2px 2px #6650a459;
-    background-color: #6750A4;
+    box-shadow: 2px 2px 2px rgba(102, 80, 164, 0.349);
+    background-color: variables.$header-bg-color;
     color: #fff;
     font-size: 1.7rem;
-}
 
-@media screen and (min-width:590px) {
-    .app_header {
+    @media screen and (min-width:590px) {
         grid-template-columns: 1fr 2fr 1fr;
-
     }
 }
 
+
 .changeDay__btn {
-    background: none;
-    border-radius: 10px;
-    color: #fff;
-    padding: 0.5rem 1rem;
-    font-size: 1.5rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    user-select: none;
+    @include mixin.standartButtonStyle();
 }
 
-.changeDay__btn:hover {
-    background-color: #4b348c;
+.view-display-btn {
+    @include mixin.standartButtonStyle();
+    border: 1px solid #fff;
 }
 
 .changeDay__container {
-    display: grid;
+    @include mixin.gridFullCenter;
     grid-template-columns: 1fr 3fr 1fr;
-    justify-items: center;
-    align-items: center;
 }
 
 .logo-container {
     display: grid;
+    justify-items: center;
     height: 100%;
     gap: .5rem;
     padding: 0 .7rem;
-    justify-items: center;
 }
 
 .logo {
@@ -146,34 +138,14 @@ const dateString = ref(formatDisplayDate());
 }
 
 .date_container {
-    display: grid;
-    align-items: center;
-    text-align: center;
-    justify-content: center;
+    @include mixin.gridFullCenter;
     font-weight: 700;
-    text-overflow: ellipsis;
 }
 
 .view-display-container {
-    display: grid;
-    align-items: center;
+    @include mixin.gridFullCenter;
     justify-content: end;
     padding: .6rem;
-}
-
-.view-display-btn {
-    background: none;
-    border-radius: 10px;
-    color: #fff;
-    border: 1px solid #fff;
-    padding: 0.5rem 1rem;
-    font-size: 1.5rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.view-display-btn:hover {
-    background-color: #4b348c;
 }
 </style>
 

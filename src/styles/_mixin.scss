@@ -1,0 +1,43 @@
+@mixin gridFullCenter{
+    display: grid;
+    place-items: center;
+}
+
+@mixin gridCenterText{
+    display: grid;
+    text-align: center;
+}
+
+@mixin dayOfWeekNameStyle{
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #4F378B;
+}
+
+@mixin standartButtonStyle{
+    display: flex;
+    background: none;
+    border-radius: 10px;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    -webkit-user-select: none;
+
+    &:hover {
+        background-color: #4b348c;
+    }
+}
+
+@mixin tableContainerBase{
+    display: grid;
+    gap: 0.9rem;
+    transition: all .5s ease;
+    min-width: 500px;
+}
+
+@mixin standartBorderShadow{
+    border-radius: 10px;
+    box-shadow: 2px 2px 2px rgba(33, 0, 93, 0.40);
+}

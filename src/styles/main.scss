@@ -1,0 +1,63 @@
+@use './_variables' as variables;
+
+html,body, #app{
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    background-color: variables.$bg-color;
+}
+
+#app{
+    display: grid;
+    height: 100%;
+    gap: 5px;
+}
+
+@media screen and (min-width:variables.$screenWidthBound) {
+    #app {
+        grid-template-rows: 1fr 12fr;
+    }
+}
+
+@media screen and (max-width:variables.$screenWidthBound) {
+    #app {
+        overflow-y: auto;
+    }
+}
+
+hr {
+    border-color: variables.$border-color;
+}
+
+a {
+    text-decoration: none;
+    font-weight: 700;
+    color: #21005D;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #4F378B;
+    border-radius: 10px;
+    transition: background .2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: variables.$border-color;
+}

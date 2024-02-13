@@ -16,34 +16,30 @@ const tableDataStore = useTableDataStore();
         </div>
     </div>
 </template>
-<style scoped>
+<style lang="scss" scoped>
+@use '../styles/mixin' as mixin;
+@use '../styles/variables' as variables;
+
 .week__container {
     display: grid;
     gap: 3rem;
-}
 
-@media screen and (min-width:1400px) {
-    .week__container {
+    @media screen and (min-width:1400px) {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
 .weekday__text {
-    font-weight: 700;
-    font-size: 1.5rem;
-    color: #4F378B;
+    @include mixin.dayOfWeekNameStyle();
 }
 
 .weekday__container {
-    display: grid;
-    gap: 0.9rem;
-    grid-template-rows: repeat(7, 1fr);
-    padding: 5px;
-    text-align: center;
+    @include mixin.tableContainerBase;
+    @include mixin.gridCenterText;
+    @include mixin.standartBorderShadow;
     align-items: center;
-    transition: all .5s ease;
-    background-color: #D0BCFF;
-    border-radius: 10px;
-    box-shadow: 1.5px 1.5px 1.5px rgba(33, 0, 93, 0.34)
+    padding: 5px;
+    grid-template-rows: repeat(7, 1fr);
+    background-color: variables.$week-day-container-bg-color;
 }
 </style>

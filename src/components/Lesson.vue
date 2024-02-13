@@ -48,23 +48,23 @@ watchEffect(() => {
     </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
+@use '../styles/mixin' as mixin;
+@use '../styles/variables' as variables;
+
 .lesson {
-    display: grid;
+    @include mixin.gridFullCenter;
+    @include mixin.standartBorderShadow;
     grid-template-columns: 2fr 1fr 5fr 1fr 5fr 1fr 2fr;
-    place-items: center;
+    background-color: variables.$table-bg-color;
     padding: 10px;
+    margin: 1.5px;
     font-size: 1.25rem;
-    background-color: #EADDFF;
-    color: #21005D;
-    border-radius: 10px;
-    box-shadow: 1.5px 1.5px 1.5px rgba(33, 0, 93, 0.34)
 }
 
 .lesson__info {
-    display: grid;
+    @include mixin.gridCenterText;
     padding: .1rem;
-    text-align: center;
 }
 
 .lesson__info__shorted {

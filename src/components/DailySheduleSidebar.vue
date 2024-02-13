@@ -33,20 +33,18 @@ const tableDataStore = useTableDataStore();
         </div>
     </div>
 </template>
-<style scoped>
+<style lang="scss" scoped>
+@use '../styles/mixin' as mixin;
+@use '../styles/variables' as variables;
+
 .current_day_info {
-    background-color: #EADDFF;
-    display: grid;
-    text-align: center;
+    @include mixin.gridCenterText;
+    @include mixin.standartBorderShadow;
+    background-color: variables.$table-bg-color;
     padding: 1rem;
     margin: 1rem;
-    border-radius: 10px;
-    color: #21005D;
-    box-shadow: 2px 2px 2px rgba(33, 0, 93, 0.40)
-}
 
-@media screen and (min-width:590px) {
-    .current_day_info {
+    @media screen and (min-width:590px) {
         overflow-y: auto;
         min-width: 200px;
     }
@@ -54,16 +52,6 @@ const tableDataStore = useTableDataStore();
 
 .current__weekday {
     font-weight: 600;
-}
-
-a {
-    text-decoration: none;
-    font-weight: 700;
-    color: #21005D;
-}
-
-a:hover {
-    text-decoration: underline;
 }
 </style>
 
