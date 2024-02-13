@@ -1,16 +1,16 @@
 version: '3.8'
 services:
   nuretable:
-    image: nure-time-table:v01
+    image: nure-time-table:v02
     ports:
       - 3000:80
     container_name: nuretable
     depends_on:
       - nuretablestorage
   nuretablestorage:
-    image: storage:v0.2
+    image: storage:v0.5
     volumes:
       - P:/data:/content      
     ports:
       - 3001:80
-    container_name: nuretablestorage
+    container_name: nuretablestoragev1

@@ -15,6 +15,5 @@ export const useGeneralStore = defineStore('generalStore', () => {
         IsTableViewDay.value = !IsTableViewDay.value;
     };
 
-
     return { CurrentDate, Date, IsTableViewDay, ChangeTableView, updateDate };
 });

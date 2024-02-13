@@ -36,8 +36,8 @@ export const useTableDataStore = defineStore('tableData', () => {
     onMounted(async () => {
         await getData();
         isReady.value = true;
-        tableForSelectedDate.value = await getSheduleForDay(moment.unix(generalStore.Date));
         tableForSelectedWeekDate.value = await getSheduleForWeek(moment.unix(generalStore.Date));
+        tableForSelectedDate.value = await getSheduleForDay(moment.unix(generalStore.Date));
         tableForCurrentDay.value = await getSheduleByDateWithoutEmpty(generalStore.CurrentDate);
     });
 
@@ -49,13 +49,13 @@ export const useTableDataStore = defineStore('tableData', () => {
             tableState.lessonThemes = await api.getThemes();
             tableState.checkoutLinks = await api.getCheckoutLinks();
             tableState.connectionLinks = await api.getConnectionLinks();
-            await getLessonList();
             setWithExpiry(STORAGE_KEY, tableState, EXPIRY_DAYS);
         }
     };
 
     const getLessonList = async (date?: moment.Moment) => {
         date = date || moment();
+        if (date.day() !== date.clone().startOf('isoWeek').day()) return;
         const tempData = await api.getSchedule(date);
 
         const updatedLessonList = tableState.lessonsList.concat(tempData);
@@ -76,7 +76,6 @@ export const useTableDataStore = defineStore('tableData', () => {
             return dateA.isBefore(dateB) ? -1 : dateA.isAfter(dateB) ? 1 : 0;
         });
     }
-
     //-----------VARIABLES FILLING-----------//
 
     //-----------LOCALSTORAGE METHODS-----------//
@@ -98,6 +97,7 @@ export const useTableDataStore = defineStore('tableData', () => {
 
         let haveData = true;
         for (const key in tableState) {
+            if (key == "lessonsList") continue;
             if (tableState[key as keyof typeof tableState] && Object.keys(tableState[key as keyof typeof tableState]).length === 0) {
                 haveData = false;
             }
@@ -142,7 +142,6 @@ export const useTableDataStore = defineStore('tableData', () => {
 
     const getSheduleForDay = async (date: moment.Moment): Promise<Lesson[]> => {
         let lessonsForDay: TableInfo[] = tableState.lessonsList.filter((elem) => elem.StartDate === date.format("DD.MM.yyyy"));
-
         if (lessonsForDay.length === 0) {
             await getLessonList(date);
             lessonsForDay = tableState.lessonsList.filter((elem) => elem.StartDate === date.format("DD.MM.yyyy"));
@@ -198,8 +197,8 @@ export const useTableDataStore = defineStore('tableData', () => {
 
     watch(() => generalStore.Date, async (newValue) => {
         if (!isReady) return;
-        tableForSelectedDate.value = await getSheduleForDay(moment.unix(newValue));
         tableForSelectedWeekDate.value = await getSheduleForWeek(moment.unix(newValue));
+        tableForSelectedDate.value = await getSheduleForDay(moment.unix(newValue));
     });
 
     return {
@@ -209,4 +208,4 @@ export const useTableDataStore = defineStore('tableData', () => {
         tableForSelectedWeekDate,
         tableForCurrentDay
     }
-}); 
+});

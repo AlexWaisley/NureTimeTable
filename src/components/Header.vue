@@ -37,19 +37,20 @@ const formatDisplayDate = (): string => {
 const writeUpdatedText = (obj: TextObject): void => {
     const { count, endText, element } = obj;
 
-    while (count <= endText.length) {
+    if (count <= endText.length) {
         element.value = endText.slice(0, count);
         obj.count++;
-        setTimeout(() => { }, 100);
+        setTimeout(() => writeUpdatedText(obj), 100);
     }
 }
 
 const eraseText = (obj: TextObject): void => {
     const { count, endText, element } = obj;
-    while (count > 0) {
+
+    if (count > 0) {
         element.value = endText.slice(0, count);
         obj.count--;
-        setTimeout(() => { }, 100);
+        setTimeout(() => eraseText(obj), 100);
     }
 }
 
